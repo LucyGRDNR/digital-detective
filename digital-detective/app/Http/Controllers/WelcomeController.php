@@ -8,31 +8,30 @@ class WelcomeController extends Controller
 {
     public function index()
     {
-        // Sample quest data
         $quests = [
             [
-                'title' => 'Adventure in Prague',
-                'location' => 'Prague',
-                'duration' => '2 hours',
+                'title' => 'Dobrodružství v Praze',
+                'location' => 'Praha',
+                'duration' => '2 hodiny',
                 'distance' => '5 km',
-                'language' => 'Czech',
-                'image' => 'https://via.placeholder.com/400x200?text=Prague'
+                'language' => 'CZ',
+                'image' => asset('storage/images/praha.jpg')
             ],
             [
-                'title' => 'Mystery in Brno',
+                'title' => 'Tajemství Brna',
                 'location' => 'Brno',
-                'duration' => '1.5 hours',
+                'duration' => '1.5 hodiny',
                 'distance' => '3 km',
-                'language' => 'Czech',
-                'image' => 'https://via.placeholder.com/400x200?text=Brno'
+                'language' => 'CZ',
+                'image' => asset('storage/images/brno.jpg')
             ],
             [
-                'title' => 'Escape in Ostrava',
+                'title' => 'Útěk z Ostravy',
                 'location' => 'Ostrava',
-                'duration' => '3 hours',
+                'duration' => '3 hodiny',
                 'distance' => '8 km',
-                'language' => 'English',
-                'image' => 'https://via.placeholder.com/400x200?text=Ostrava'
+                'language' => 'EN',
+                'image' => asset('storage/images/ostrava.jpg')
             ],
         ];
 
