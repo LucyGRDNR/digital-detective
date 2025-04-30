@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('text');
             $table->boolean('is_wrong');
             $table->unsignedBigInteger('next_chapter_id')->nullable();
+            $table->unsignedBigInteger('wrong_chapter_id')->nullable();
+            $table->foreign('wrong_chapter_id')->references('id')->on('chapters')->nullOnDelete();
             $table->foreign('next_chapter_id')->references('id')->on('chapters')->nullOnDelete();
             $table->timestamps();
         });

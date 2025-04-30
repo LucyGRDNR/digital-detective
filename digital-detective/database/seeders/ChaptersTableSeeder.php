@@ -50,6 +50,61 @@ class ChaptersTableSeeder extends Seeder
             'next_chapter_id' => null,
         ]);
 
+        $chapter7 = Chapter::create([
+            'story_id' => 1,
+            'content' => 'Už jsi konečně před Pražskou 13?',
+            'next_chapter_id' => null,
+        ]);
+
+        $chapter8 = Chapter::create([
+            'story_id' => 1,
+            'content' => 'Bohužel nikoli. Ale možná by Ti mohlo napovědět zjištění, jaký je právě čas.',
+            'next_chapter_id' => null,
+        ]);
+
+        $chapter9 = Chapter::create([
+            'story_id' => 1,
+            'content' => 'Dobrá práce! A pátrání pokračuje. Můžeš si případně poznamenat DAPOR jako kód dalšího úkolu.',
+            'next_chapter_id' => null,
+        ]);
+
+        $chapter10 = Chapter::create([
+            'story_id' => 1,
+            'content' => 'Hned vedle stojí bohatý podnikatel a nahlas přemýšlí, jaký dárek by měl koupit pro svého kamaráda. Rád by mu dal něco extravagantního, co by současně dokázalo měřit čas.',
+            'next_chapter_id' => null,
+        ]);
+
+        $chapter11 = Chapter::create([
+            'story_id' => 1,
+            'content' => 'Ne tak docela. Ale pokud tě napadá, jak by se tím dal měřit čas, určitě budeme rádi za návrh. Ale nyní zkus ještě něco jiného.',
+            'next_chapter_id' => null,
+        ]);
+
+        $chapter12 = Chapter::create([
+            'story_id' => 1,
+            'content' => 'Ano, je to svíčka! Ta časoměrná má na sobě barevně oddělené pruhy a jak odhořívá, měří čas. (Můžeš si případně poznamenat FSTOA jako kód dalšího úkolu.)',
+            'next_chapter_id' => null,
+        ]);
+
+        $chapter13 = Chapter::create([
+            'story_id' => 1,
+            'content' => 'Podnikatel byl tak nadšen, že ti dal k dispozici fotografie, které pořídil a na mobil odeslal jeho luxusní fotoaparát, než jej o něj připravil jakýsi chmaták. Jeho popis shodou okolností odpovídá i popisu bankovního lupiče. Vystopuj lupičovy další kroky z fragmentů nahodile pořízených obrázků. Zadávej jako odpověď vždy číslo nejbližší pouliční lampy (ano, každá lampa má své číslo). Po zadání správného čísla, obdržíš další fotografii.
+Nejprve najdi toto místo:',
+            'next_chapter_id' => null,
+        ]);
+
+        $chapter14 = Chapter::create([
+            'story_id' => 1,
+            'content' => 'Toto bohužel není hledané číslo. Stojíš určitě na správném místě? Je to nejbližší lampa? Jen hledej…',
+            'next_chapter_id' => null,
+        ]);
+
+        $chapter15 = Chapter::create([
+            'story_id' => 1,
+            'content' => 'Číslo je správně, můžeš pokračovat! Můžeš si případně poznamenat F37HL jako kód dalšího úkolu.',
+            'next_chapter_id' => null,
+        ]);
+
         $chapter1->next_chapter_id = $chapter3->id;
         $chapter1->save();
 
@@ -64,5 +119,32 @@ class ChaptersTableSeeder extends Seeder
 
         $chapter5->next_chapter_id = $chapter4->id;
         $chapter5->save();
+
+        $chapter6->next_chapter_id = $chapter7->id;
+        $chapter6->save();
+
+        $chapter7->next_chapter_id = $chapter9->id;
+        $chapter7->save();
+
+        $chapter8->next_chapter_id = $chapter7->id;
+        $chapter8->save();
+
+        $chapter9->next_chapter_id = $chapter10->id;
+        $chapter9->save();
+
+        $chapter10->next_chapter_id = $chapter10->id;
+        $chapter10->save();
+
+        $chapter11->next_chapter_id = $chapter10->id;
+        $chapter11->save();
+
+        $chapter12->next_chapter_id = $chapter13->id;
+        $chapter12->save();
+
+        $chapter13->next_chapter_id = $chapter15->id;
+        $chapter13->save();
+
+        $chapter14->next_chapter_id = $chapter13->id;
+        $chapter14->save();
     }
 }

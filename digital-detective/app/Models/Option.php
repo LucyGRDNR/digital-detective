@@ -15,4 +15,9 @@ class Option extends Model
     {
         return $this->belongsTo(Chapter::class, 'next_chapter_id');
     }
+
+    public function wrongChapter()
+    {
+        return $this->belongsTo(Chapter::class, 'wrong_chapter_id');
+    }
 }
