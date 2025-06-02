@@ -14,3 +14,13 @@ Route::get('/chapter/{chapter}', [GameController::class, 'loadChapter']);
 Route::post('/submit-answer/{chapter}', [GameController::class, 'submitAnswer'])->name('submit.answer');
 
 Route::get('/', [WelcomeController::class, 'index']);
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
