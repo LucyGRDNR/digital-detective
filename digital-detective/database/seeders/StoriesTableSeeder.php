@@ -22,5 +22,27 @@ class StoriesTableSeeder extends Seeder
             'distance' => 200,
             'time' => 30
         ]);
+
+         
+        Story::create([
+            'name' => 'TAJNÝ POKLAD STARÉHO MĚSTA',
+            'description' => 'Dobrodružná hra pro celou rodinu, která vás provede historickým centrem města. Hledejte stopy, řešte hádanky a objevte tajemství ukryté mezi starými uličkami.',
+            'image_path' => 'images/poklad.jpg',
+            'place' => 'Český Krumlov',
+            'place_GPS' => '',
+            'distance' => 1500,
+            'time' => 60
+        ]);
+
+        Story::create([
+            'name' => 'ZÁHADA LESNÍHO DUCHA',
+            'description' => 'Napínavá stezka lesem, kde se setkáte s legendami a pověstmi místního kraje. Ideální pro milovníky přírody a tajemna.',
+            'image_path' => 'images/les.jpg',
+            'place' => 'Šumava',
+            'place_GPS' => '',
+            'distance' => 3000,
+            'time' => 90
+        ]);
+
     }
 }
