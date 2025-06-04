@@ -1,19 +1,5 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<x-guest-layout>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digitální Detektiv</title>
-
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-</head>
-
-<body>
     <header>
         <h1>Digitální Detektiv</h1>
     </header>
@@ -31,6 +17,5 @@
             @endforeach
         </div>
     </main>
-</body>
 
-</html>
+</x-guest-layout>
