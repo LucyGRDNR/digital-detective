@@ -7,17 +7,11 @@ use App\Http\Controllers\WelcomeController;
 
 Route::get('/story/{storyId}', [StoryController::class, 'show'])->name('show.story');
 
-Route::middleware(['auth'])->group(function () {
-   Route::get('/play/{story}', [GameController::class, 'play'])->name('play.story');
-});
-
-
-
 Route::get('/chapter/{chapter}', [GameController::class, 'loadChapter']);
 
 Route::post('/submit-answer/{chapter}', [GameController::class, 'submitAnswer'])->name('submit.answer');
 
-Route::get('/', [WelcomeController::class, 'index']);
+Route::get('/', [WelcomeController::class, 'index'])->name('index');
 /** Localization change */
 Route::get('/lang/{locale}', [WelcomeController::class, 'changeLocale'])->name('changeLocale');
 
@@ -31,6 +25,8 @@ Route::middleware([
     Route::group(['middleware' => ['role:admin']], function () {
 
     });
+
+    Route::get('/play/{story}', [GameController::class, 'play'])->name('play.story');
 
     Route::get('/dashboard', function () {
         return view('dashboard');
