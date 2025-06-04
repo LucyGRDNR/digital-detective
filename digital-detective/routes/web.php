@@ -7,7 +7,11 @@ use App\Http\Controllers\WelcomeController;
 
 Route::get('/story/{storyId}', [StoryController::class, 'show'])->name('show.story');
 
-Route::get('/play/{story}', [GameController::class, 'play'])->name('play.story');
+Route::middleware(['auth'])->group(function () {
+   Route::get('/play/{story}', [GameController::class, 'play'])->name('play.story');
+});
+
+
 
 Route::get('/chapter/{chapter}', [GameController::class, 'loadChapter']);
 
