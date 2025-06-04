@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
             'email' => "admin@admin.com",
             'password' => Hash::make("adminskeHeslo"),
         ]);
-        $admin->assgnRole('admin');
+        $admin->assignRole('admin');
 
         $this->call([
             StoriesTableSeeder::class,
