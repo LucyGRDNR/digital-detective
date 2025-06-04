@@ -9,9 +9,9 @@
                             <img src="{{ asset('storage/' . $story->image_path) }}" alt="{{ $story->name }}" class="h-full w-full object-cover" />
                         </div>
                         <h2 class="mb-1 text-lg font-bold">{{ $story->name }}</h2>
-                        <p class="mb-1 text-sm text-gray-300">Start: {{ $story->place }}</p>
-                        <p class="mb-1 text-sm text-gray-300">Time: {{ $story->time }}</p>
-                        <p class="mb-4 text-sm text-gray-300">Distance: {{ $story->distance }}</p>
+                        <p class="mb-1 text-sm text-gray-300">{{ __('Start') }}: {{ $story->place }}</p>
+                        <p class="mb-1 text-sm text-gray-300">{{ __('Time') }}: {{ $story->time }}</p>
+                        <p class="mb-4 text-sm text-gray-300">{{ __('Distance') }}: {{ $story->distance }}</p>
                     </div>
                 </a>
             @endforeach

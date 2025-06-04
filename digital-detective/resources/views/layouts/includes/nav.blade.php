@@ -7,8 +7,12 @@
 
     <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 w-full sm:w-auto gap-2">
         @guest
-            <a href="{{ route('login') }}" class="text-blue-400 hover:underline text-left sm:text-center">Přihlásit se</a>
-            <a href="{{ route('register') }}" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 text-center sm:text-left">Registrovat se</a>
+            <a href="{{ route('login') }}" class="text-blue-400 hover:underline text-left sm:text-center">
+                {{ __('Sign In') }}
+            </a>
+            <a href="{{ route('register') }}" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 text-center sm:text-left">
+                {{ __('Sign Up') }}
+            </a>
         @endguest
 
         @auth
@@ -24,19 +28,24 @@
                 <div x-show="open" @click.away="open = false"
                     class="absolute right-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-50">
                     <a href="{{ route('profile.show') }}"
-                        class="block px-4 py-2 text-sm hover:bg-gray-100">Profil</a>
+                        class="block px-4 py-2 text-sm hover:bg-gray-100">
+                        {{ __('Profile') }}
+                    </a>
 
                     <form method="POST" action="{{ route('logout') }}" class="block">
                         @csrf
-                        <button type="submit"
-                            class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Odhlásit se</button>
+                        <button
+                            type="submit"
+                            class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
+                            {{ __('Log Out') }}
+                        </button>
                     </form>
                 </div>
             </div>
         @endauth
 
         @php
-        $lang = Session::get('locale');
+            $lang = Session::get('locale');
         @endphp
 
         @if($lang == 'cs')

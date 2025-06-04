@@ -13,15 +13,15 @@
             <p class="text-gray-300 mb-4 text-sm md:text-base">{{ $story->description }}</p>
 
             <div class="mb-6 text-sm md:text-base text-gray-400">
-              <strong>Místo:</strong> {{ $story->place }} <br>
-              <strong>Čas:</strong> {{ $story->time }} minut <br>
-              <strong>Vzdálenost:</strong> {{ $story->distance }} m
+              <strong>{{ __('Location') }}:</strong> {{ $story->place }} <br>
+              <strong>{{ __('Time') }}:</strong> {{ $story->time }} minut <br>
+              <strong>{{ __('Distance') }}:</strong> {{ $story->distance }} m
             </div>
 
             @auth
                 <a href="{{ route('play.story', ['story' => $story->id]) }}">
                     <button class="w-full rounded bg-blue-600 px-6 py-3 text-white hover:bg-blue-700 text-lg font-semibold transition">
-                        Hrát
+                        {{ __('Play') }}
                     </button>
                 </a>
             @else
