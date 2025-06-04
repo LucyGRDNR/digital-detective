@@ -375,5 +375,8 @@
     "You may delete any of your existing tokens if they are no longer needed.": "Můžete odstranit některý z vašich stávajících žetonů, pokud již nejsou potřeba.",
     "You may not delete your personal team.": "Nesmíte smazat svůj osobní tým.",
     "You may not leave a team that you created.": "Nesmíte opustit tým, který jste vytvořili.",
-    "Your email address is unverified.": "Vaše e-mailová adresa není ověřena."
+    "Your email address is unverified.": "Vaše e-mailová adresa není ověřena.",
+    "login_or_register_to_play": "Pro spuštění hry se prosím :login nebo :register.",
+    "login_link": "přihlaste",
+    "register_link": "zaregistrujte"
 }

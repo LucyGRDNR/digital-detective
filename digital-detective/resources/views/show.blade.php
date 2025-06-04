@@ -26,7 +26,13 @@
                 </a>
             @else
                 <div class="mt-6 text-center text-yellow-400 text-sm md:text-base">
-                    Pro spuštění hry se prosím <a href="{{ route('login') }}" class="underline text-blue-400">přihlaste</a> nebo <a href="{{ route('register') }}" class="underline text-blue-400">zaregistrujte</a>.
+                    {!! __('login_or_register_to_play',
+                        [
+                            'login' => '<a href="'. route('login') .'" class="underline text-blue-400">'. __('login_link') .'</a>',
+                            'register' => '<a href="'. route('register') .'" class="underline text-blue-400">'. __('register_link') .'</a>'
+                        ]
+                        )
+                    !!}
                 </div>
             @endauth
         </div>

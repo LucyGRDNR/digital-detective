@@ -8,7 +8,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 w-full sm:w-auto gap-2">
         @guest
             <a href="{{ route('login') }}" class="text-blue-400 hover:underline text-left sm:text-center">
-                {{ __('Sign In') }}
+                {{ __('Log In') }}
             </a>
             <a href="{{ route('register') }}" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 text-center sm:text-left">
                 {{ __('Sign Up') }}
