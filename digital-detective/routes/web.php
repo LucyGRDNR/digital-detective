@@ -14,6 +14,8 @@ Route::get('/chapter/{chapter}', [GameController::class, 'loadChapter']);
 Route::post('/submit-answer/{chapter}', [GameController::class, 'submitAnswer'])->name('submit.answer');
 
 Route::get('/', [WelcomeController::class, 'index']);
+/** Localization change */
+Route::get('/lang/{locale}', [WelcomeController::class, 'changeLocale'])->name('changeLocale');
 
 Route::middleware([
     'auth:sanctum',

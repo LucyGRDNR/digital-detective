@@ -100,3 +100,24 @@ main {
     margin-top: 20px;
     border-radius: 30px;
 }
+
+/** lang */
+.img--locale {
+    width: 25px;
+    aspect-ratio: 1;
+    display: block;
+    position: fixed;
+    right: 5px;
+    top: 5px;
+}
+
+
+.img__cs {
+    background: url("../storage/lang/cs.svg");
+    background-size: cover;
+}
+
+.img__en {
+    background: url("../storage/lang/en.svg");
+    background-size: cover;
+}

@@ -5,6 +5,8 @@
     </head>
     <body>
 
+        @include('layouts.includes.language')
+
         {{ $slot }}
 
         @livewireScripts
