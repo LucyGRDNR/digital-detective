@@ -13,7 +13,9 @@
             <p>📍 {{ $story->place }} | ⏳ {{ $story->duration }} | 🚶 {{ $story->distance }}</p>
 
             <a href="{{ route('play.story', ['story' => $story->id]) }}">
-                <button class="start-button">Start Playing</button>
+                <button class="start-button">
+                    {{ __('Start Playing') }}
+                </button>
             </a>
 
         </div>
