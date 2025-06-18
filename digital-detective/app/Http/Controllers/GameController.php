@@ -2,17 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Story;
 use App\Models\Chapter;
+use App\Models\Question;
+use App\Models\Option;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class GameController extends Controller
 {
-    public function play($storyId)
+   public function play(Request $request, Story $story)
     {
-        $firstChapter = Chapter::where('story_id', $storyId)->orderBy('id')->first();
+        $startOver = $request->query('start_over', false);
 
         return view('play', [
-            'story_id' => $storyId,
-            'first_chapter_id' => $firstChapter->id,
+            'story' => $story,
+            'startOver' => $startOver, 
         ]);
     }
 }
