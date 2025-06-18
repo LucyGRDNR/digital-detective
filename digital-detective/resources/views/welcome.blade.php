@@ -37,10 +37,22 @@
                         <div class="mb-3 h-48 w-full overflow-hidden rounded">
                             <img src="{{ asset('storage/' . $story->image_path) }}" onerror="this.onerror=null;this.src='https://placehold.co/400x250/333333/FFFFFF?text=No+Image';" alt="{{ $story->name }}" class="h-full w-full object-cover" />
                         </div>
-                        <h2 class="mb-1 text-lg font-bold">{{ $story->name }}</h2>
-                        <p class="mb-1 text-sm text-gray-300">{{ __('welcome-show.location') }}: {{ $story->place }}</p>
-                        <p class="mb-1 text-sm text-gray-300">{{ __('welcome-show.time') }}: {{ $story->time }} {{ __('welcome-show.minutes') }}</p>
-                        <p class="mb-4 text-sm text-gray-300">{{ __('welcome-show.distance') }}: {{ $story->distance }} {{ __('welcome-show.kilometers') }}</p>
+                        <h2 class="mb-1 text-lg font-bold text-center">{{ $story->name }}</h2>
+                        <p class="mb-2 text-sm text-gray-300">
+                        <strong class="text-gray-200">
+                            <i class="fas fa-map-marker-alt mr-2 text-base"></i> {{ __('welcome-show.location') }}:
+                        </strong> {{ $story->place }}
+                        </p>
+                        <p class="mb-2 text-sm text-gray-300">
+                            <strong class="text-gray-200">
+                                <i class="fas fa-clock mr-2"></i> {{ __('welcome-show.time') }}:
+                            </strong> {{ $story->time }} {{ __('welcome-show.minutes') }}
+                        </p>
+                        <p class="mb-2 text-sm text-gray-300">
+                            <strong class="text-gray-200">
+                                <i class="fas fa-route mr-2"></i> {{ __('welcome-show.distance') }}:
+                            </strong> {{ $story->distance }} {{ __('welcome-show.kilometers') }}
+                        </p>
                     </a>
                 </div>
             @endforeach
