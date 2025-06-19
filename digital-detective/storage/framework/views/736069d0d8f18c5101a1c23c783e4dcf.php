@@ -68,7 +68,6 @@
 
                         </a>
                     <?php endif; ?>
-                    <a href="<?php echo e(route('profile.show')); ?>" class="block px-4 py-2 text-sm hover:bg-gray-600 transition duration-150 ease-in-out <?php if(!Auth::user()->hasRole('admin')): ?> rounded-t <?php endif; ?>"><?php echo e(__('welcome-show.profile')); ?></a>
                     <form method="POST" action="<?php echo e(route('logout')); ?>" class="block">
                         <?php echo csrf_field(); ?>
                         <button type="submit" class="w-full text-left px-4 py-2 text-sm hover:bg-gray-600 transition duration-150 ease-in-out rounded-b"><?php echo e(__('welcome-show.logout')); ?></button>
@@ -134,7 +133,6 @@
                     <?php if(Auth::user()->hasRole('admin')): ?>
                         <a href="<?php echo e(route('story.create')); ?>" class="block px-4 py-2 text-lg text-white hover:bg-gray-700 rounded transition duration-200 ease-in-out"><?php echo e(__('welcome-show.add_new_story')); ?></a>
                     <?php endif; ?>
-                    <a href="<?php echo e(route('profile.show')); ?>" class="block px-4 py-2 text-lg text-white hover:bg-gray-700 rounded transition duration-200 ease-in-out"><?php echo e(__('welcome-show.profile')); ?></a>
                     <form method="POST" action="<?php echo e(route('logout')); ?>" class="block">
                         <?php echo csrf_field(); ?>
                         <button type="submit" class="w-full text-left px-4 py-2 text-lg text-white hover:bg-gray-700 rounded transition duration-200 ease-in-out"><?php echo e(__('welcome-show.logout')); ?></button>
