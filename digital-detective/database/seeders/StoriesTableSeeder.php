@@ -24,7 +24,7 @@ class StoriesTableSeeder extends Seeder
                     Malé děti zcela jistě nebudou vědět odpovědi na tázané otázky, ale mohlo by je bavit si všímat míst a věcí kolem sebe a hledat nějaký ukrytý poklad.
                     Hra začíná u věže kostela na náměstí Republiky v Plzni. Pokud tedy ještě nejsi na tom správném místě, doprav se nejprve tam a poté pokračuj.
                     Poznámka pro rodiče: na konci je ale poklad pouze imaginární, takže pokud byste šli s dětmi, připravte si něco k nalezení dopředu, nebo vysvětlení, jak to s tím pokladem je. Však uvidíte!:)',
-                'image_path' => 'images/3Hfxxt0ykP4ZExF7ggVTIFhWiXFAhBRnFoWsJccO.jpg',
+                'image_path' => 'images/poklad-story.jpg',
                 'place' => 'Kostel na náměstí Republiky v Plzni',
                 'place_GPS' => NULL,
                 'distance' => 2,
@@ -37,7 +37,7 @@ class StoriesTableSeeder extends Seeder
                 'name' => 'CHYŤ POPLETENÉHO ZLODĚJE',
                 'description' => 'Procházková hra na cca 30 min, vhodná i jako procházka s dětmi. Během pátrání bude třeba si všímat míst a věcí kolem sebe a hledat různé drobnosti, což může bavit právě i děti.
                     Hra začíná u věže kostela na náměstí Republiky v Plzni. Pokud tedy ještě nejsi na tom správném místě, doprav se nejprve tam a poté pokračuj.',
-                'image_path' => 'images/zlodej-700-993480.jpg',
+                'image_path' => 'images/zlodej-story.jpg',
                 'place' => 'Kostel na náměstí Republiky v Plzni',
                 'place_GPS' => NULL,
                 'distance' => 2,

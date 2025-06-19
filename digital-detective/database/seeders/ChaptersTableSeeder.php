@@ -132,7 +132,7 @@ class ChaptersTableSeeder extends Seeder
                 'story_id' => 1,
                 'title' => 'Tajemný strom',
                 'content' => 'Téměř to vypadá, že to bude prostě klasicky poklad zakopaný pod stromem.',
-                'image_path' => 'chapter_images/wlXoIjqDaKPw015ZVz0Ls65s2BJYA3AJd4QpYVYu.jpg',
+                'image_path' => 'chapter_images/katalpa-chapter.jpg',
                 'is_end' => 0,
                 'next_chapter_id' => NULL,
                 'created_at' => '2025-06-18 07:33:25',
