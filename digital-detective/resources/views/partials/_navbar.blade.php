@@ -66,7 +66,6 @@
                         {{ __('welcome-show.add_new_story') }}
                         </a>
                     @endif
-                    <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm hover:bg-gray-600 transition duration-150 ease-in-out @if(!Auth::user()->hasRole('admin')) rounded-t @endif">{{ __('welcome-show.profile') }}</a>
                     <form method="POST" action="{{ route('logout') }}" class="block">
                         @csrf
                         <button type="submit" class="w-full text-left px-4 py-2 text-sm hover:bg-gray-600 transition duration-150 ease-in-out rounded-b">{{ __('welcome-show.logout') }}</button>
@@ -132,7 +131,6 @@
                     @if(Auth::user()->hasRole('admin'))
                         <a href="{{ route('story.create') }}" class="block px-4 py-2 text-lg text-white hover:bg-gray-700 rounded transition duration-200 ease-in-out">{{ __('welcome-show.add_new_story') }}</a>
                     @endif
-                    <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-lg text-white hover:bg-gray-700 rounded transition duration-200 ease-in-out">{{ __('welcome-show.profile') }}</a>
                     <form method="POST" action="{{ route('logout') }}" class="block">
                         @csrf
                         <button type="submit" class="w-full text-left px-4 py-2 text-lg text-white hover:bg-gray-700 rounded transition duration-200 ease-in-out">{{ __('welcome-show.logout') }}</button>

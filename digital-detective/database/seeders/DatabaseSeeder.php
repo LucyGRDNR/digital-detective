@@ -5,8 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-// No need to directly use Spatie\Permission\Models\Role here anymore for role creation
-// No need for Spatie\Permission\PermissionRegistrar::class here, as RolesAndPermissionsSeeder handles it
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,6 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolesAndPermissionsSeeder::class,
+            StoriesTableSeeder::class,
+            ChaptersTableSeeder::class,
+            QuestionsTableSeeder::class,
+            OptionsTableSeeder::class,
         ]);
 
 

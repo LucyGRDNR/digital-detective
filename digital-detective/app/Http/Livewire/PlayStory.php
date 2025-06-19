@@ -39,22 +39,14 @@ class PlayStory extends Component
         $this->story = $story;
         $user = Auth::user();
 
-        // Find or create the user's progress record for this story
         $this->progress = UserStoryProgress::firstOrNew([
             'user_id' => $user->id,
             'story_id' => $story->id,
         ]);
 
-        // Determine if this is a fresh start (either 'start_over' or brand new progress)
         $isFreshStart = $start_over || !$this->progress->exists;
-
-        // Logic for "Start New Story" or "Start Over":
         if ($start_over) {
-            UserStoryLog::where('user_id', $user->id)
-                        ->where('story_id', $story->id)
-                        ->delete();
-
-            $this->progress->current_chapter_id = null; // Reset to null or first chapter ID
+            $this->progress->current_chapter_id = null;
             $this->progress->is_end = false;
             $this->progress->save();
         } elseif (!$this->progress->exists) {
@@ -62,30 +54,9 @@ class PlayStory extends Component
             $this->progress->save();
         }
 
-        if ($isFreshStart) {
-            UserStoryLog::create([
-                'user_id' => $user->id,
-                'story_id' => $this->story->id,
-                'event_type' => 'story_started',
-                'event_description' => 'User started a new playthrough of the story.',
-            ]);
-        } else {
-            if ($this->progress->current_chapter_id !== null && !$this->progress->is_end) {
-                UserStoryLog::create([
-                    'user_id' => $user->id,
-                    'story_id' => $this->story->id,
-                    'chapter_id' => $this->progress->current_chapter_id,
-                    'event_type' => 'story_resumed',
-                    'event_description' => 'User resumed the story.',
-                ]);
-            }
-        }
-
-
-        // Determine the chapter to load
         if (
             $this->progress->current_chapter_id === null ||
-            $this->progress->is_end === true // If the previous session was marked as ended
+            $this->progress->is_end === true
         ) {
             $firstChapter = Chapter::where('story_id', $this->story->id)->orderBy('id')->first();
             if (!$firstChapter) {
@@ -95,11 +66,9 @@ class PlayStory extends Component
             $this->loadChapter($firstChapter->id);
 
         } else {
-            // Resume from existing progress
             $this->loadChapter($this->progress->current_chapter_id);
         }
         
-        // Initialize the Livewire component's $isGameEnd based on the loaded chapter
         $this->isGameEnd = (bool)($this->currentChapter && $this->currentChapter->is_end);
     }
 
@@ -120,62 +89,30 @@ class PlayStory extends Component
         ]);
 
         $this->currentChapter = Chapter::with('question.options')->find($chapterId);
+        $this->question = $this->currentChapter->question;
 
-        if (!$this->currentChapter || $this->currentChapter->story_id !== $this->story->id) {
-            $this->feedbackMessage = __('play.invalid_chapter_access');
-            $this->showFeedback = true;
+        if ($this->currentChapter->is_end) {
             $this->isGameEnd = true;
-            $this->progress->is_end = true;
-            $this->progress->save();
-
-            UserStoryLog::create([
-                'user_id' => Auth::id(),
-                'story_id' => $this->story->id,
-                'chapter_id' => $chapterId,
-                'event_type' => 'error_invalid_chapter_access',
-                'event_description' => 'Attempted to access invalid chapter or chapter not in story. Story ended.',
-            ]);
-            return;
         }
 
         $this->question = $this->currentChapter->question;
         
-        // Update the current chapter in the database progress record
         $this->progress->current_chapter_id = $this->currentChapter->id;
-        // Reset is_end to false if we are moving to a new chapter that is not an end chapter
+
         if (!$this->currentChapter->is_end) {
             $this->progress->is_end = false;
         }
         $this->progress->save();
 
-        // Update Livewire component's state
+
         $this->isGameEnd = (bool)($this->currentChapter->is_end);
 
-        // If this chapter is an end chapter, mark 'completed' in DB and 'is_end'
         if ($this->isGameEnd) {
             $this->progress->is_end = true;
             if (!$this->progress->completed) {
                 $this->progress->completed = true;
             }
             $this->progress->save();
-
-            // Log story completion
-            UserStoryLog::create([
-                'user_id' => Auth::id(),
-                'story_id' => $this->story->id,
-                'chapter_id' => $this->currentChapter->id,
-                'event_type' => 'story_completed',
-                'event_description' => 'User reached the end of the story.',
-            ]);
-        } else {
-            // Log chapter visit
-            UserStoryLog::create([
-                'user_id' => Auth::id(),
-                'story_id' => $this->story->id,
-                'chapter_id' => $this->currentChapter->id,
-                'event_type' => 'chapter_visit',
-                'event_description' => 'User visited chapter: ' . $this->currentChapter->title,
-            ]);
         }
     }
 
@@ -187,139 +124,95 @@ class PlayStory extends Component
      */
     public function submitAnswer()
     {
-        if (!$this->question) {
-            $this->feedbackMessage = __('play.no_question_to_answer');
-            $this->showFeedback = true;
-            $this->isCorrect = false;
-            return;
-        }
+        $this->showFeedback = true; 
 
-        $nextChapterId = null;
-        $isAnswerCorrect = false;
-        $chosenOption = null;
-        $userInput = null;
-
-        try {
-            if (in_array($this->question->type, [Question::TYPE_TEXT, Question::TYPE_NUMBER])) {
+       try {
+            if (in_array($this->question->type, [1, 2])) {
                 $this->validate([
-                    'inputAnswer' => $this->question->type === Question::TYPE_NUMBER ? 'required|numeric' : 'required|string',
+                    'inputAnswer' => $this->question->type === 2 ? 'required|numeric' : 'required|string',
                 ], [
                     'inputAnswer.required' => __('play.validation_answer_required'),
                     'inputAnswer.numeric' => __('play.validation_number_invalid'),
                 ]);
 
-                $userInput = trim($this->inputAnswer);
-                $correctOption = $this->question->options->firstWhere('is_correct', true);
-                $correctAnswerText = $correctOption ? trim($correctOption->text) : '';
+                $userAnswer = trim($this->inputAnswer);
+                $correctAnswer = trim($this->question->input_answer);
 
-                if ($this->question->type === Question::TYPE_NUMBER) {
-                    $isAnswerCorrect = ((float)$userInput === (float)$correctAnswerText);
-                    $this->feedbackMessage = $isAnswerCorrect
-                        ? ($correctOption->feedback_correct ?: __('play.correct_answer'))
-                        : (($userInput < $correctAnswerText ? __('play.too_low') : __('play.too_high')) . "\n" . ($correctOption->feedback_incorrect ?: __('play.incorrect_answer')));
-                } else { // Text type
-                    $isAnswerCorrect = mb_strtolower($userInput) === mb_strtolower($correctAnswerText);
-                    $this->feedbackMessage = $isAnswerCorrect
-                        ? ($correctOption->feedback_correct ?: __('play.correct_answer'))
-                        : ($correctOption->feedback_incorrect ?: __('play.incorrect_answer'));
+                if ($this->question->type === 2) {
+                    $this->isCorrect = ((float)$userAnswer === (float)$correctAnswer);
+                    $this->feedbackMessage = $this->isCorrect
+                        ? ''
+                        : (($userAnswer < $correctAnswer ? __('play.too_low') : __('play.too_high')) . "\n" . ($this->question->wrong_feedback ?? '')); // Only display wrong_feedback if it exists
+                } else {
+                    $this->isCorrect = mb_strtolower($userAnswer) === mb_strtolower($correctAnswer);
+                    $this->feedbackMessage = $this->isCorrect
+                        ?  ''
+                        : ($this->question->wrong_feedback ?? '');
                 }
 
-                $nextChapterId = $isAnswerCorrect
-                    ? ($correctOption->next_chapter_id ?: $this->currentChapter->next_chapter_id)
-                    : ($correctOption->next_chapter_id_incorrect ?: $this->currentChapter->next_chapter_id_incorrect);
-
-            } elseif ($this->question->type === Question::TYPE_MULTIPLE_CHOICE) {
+                if ($this->isCorrect) {
+                    if ($this->currentChapter->is_end) {
+                        $this->isGameEnd = true;
+                        $this->showFeedback = true;
+                        $this->feedbackMessage = __('play.end_story_congratulations');
+                    } elseif ($this->currentChapter->next_chapter_id) {
+                        $this->showFeedback = false;
+                        $this->loadChapter($this->currentChapter->next_chapter_id);
+                    } else {
+                        $this->isGameEnd = true;
+                        $this->showFeedback = true;
+                        $this->feedbackMessage = __('play.unexpected_end_correct_answer');
+                    }
+                }
+            } elseif ($this->question->type === 3) {
                 $this->validate(['selectedOptionId' => 'required|exists:options,id'], [
                     'selectedOptionId.required' => __('play.validation_option_required'),
                 ]);
 
-                $chosenOption = Option::find($this->selectedOptionId);
-                $userInput = $chosenOption->text; // Store the text of the chosen option
+                $option = Option::find($this->selectedOptionId);
+                $isQuizMode = $this->question->options->contains(fn ($opt) => (bool)$opt->is_correct);
+                
+                if ($isQuizMode) {
+                    $this->isCorrect = (bool)$option->is_correct;
+                    $this->feedbackMessage = $this->isCorrect ? __('play.correct') : ($this->question->wrong_feedback ?? __('play.try_again'));
 
-                if ($chosenOption && $chosenOption->question_id === $this->question->id) {
-                    $isQuizMode = $this->question->options->contains(fn ($opt) => (bool)$opt->is_correct);
-
-                    if ($isQuizMode) {
-                        $isAnswerCorrect = (bool)$chosenOption->is_correct;
-                        $this->feedbackMessage = $isAnswerCorrect
-                            ? ($chosenOption->feedback_correct ?: __('play.correct_answer'))
-                            : ($chosenOption->feedback_incorrect ?: __('play.incorrect_answer'));
-
-                        $nextChapterId = $isAnswerCorrect
-                            ? ($chosenOption->next_chapter_id ?: $this->currentChapter->next_chapter_id)
-                            : ($chosenOption->next_chapter_id_incorrect ?: $this->currentChapter->next_chapter_id_incorrect);
-                    } else {
-                        // Branching narrative: any option chosen is considered 'correct' for progression
-                        $isAnswerCorrect = true; // Always true for progression in branching narratives
-                        $this->feedbackMessage = $chosenOption->feedback_correct ?: '';
-                        $nextChapterId = $chosenOption->next_chapter_id ?: $this->currentChapter->next_chapter_id;
+                    if ($this->isCorrect) {
+                        if ($this->currentChapter->is_end) {
+                            $this->isGameEnd = true;
+                            $this->showFeedback = true;
+                            $this->feedbackMessage = __('play.end_story_congratulations');
+                        } elseif ($option->next_chapter_id) {
+                            $this->showFeedback = false;
+                            $this->loadChapter($option->next_chapter_id);
+                        } else {
+                            $this->isGameEnd = true;
+                            $this->showFeedback = true;
+                            $this->feedbackMessage = __('play.unexpected_end_correct_answer');
+                        }
                     }
                 } else {
-                    throw ValidationException::withMessages(['selectedOptionId' => __('play.invalid_option_chosen')]);
+                    $this->isCorrect = true;
+                    $this->feedbackMessage = '';
+                    $this->showFeedback = false;
+
+                    if ($this->currentChapter->is_end) {
+                        $this->isGameEnd = true;
+                        $this->showFeedback = true;
+                        $this->feedbackMessage = __('play.end_story_congratulations');
+                    } elseif ($option->next_chapter_id) {
+                        $this->loadChapter($option->next_chapter_id);
+                    } else {
+                        $this->isGameEnd = true;
+                        $this->showFeedback = true;
+                        $this->feedbackMessage = __('play.unexpected_end_choice');
+                    }
                 }
-            }
-
-            $this->isCorrect = $isAnswerCorrect;
-            $this->showFeedback = true;
-
-            // Log the question answer before determining next step
-            UserStoryLog::create([
-                'user_id' => Auth::id(),
-                'story_id' => $this->story->id,
-                'chapter_id' => $this->currentChapter->id,
-                'question_id' => $this->question->id,
-                'option_id' => $chosenOption ? $chosenOption->id : null,
-                'user_input' => $userInput,
-                'is_correct_answer' => $isAnswerCorrect,
-                'event_type' => 'Youtubeed',
-                'event_description' => 'User answered question: "' . $this->question->text . '" - ' . ($isAnswerCorrect ? 'Correct' : 'Incorrect'),
-            ]);
-
-
-            // Determine the next step based on answer correctness and chapter links
-            if ($this->currentChapter->is_end) {
-                $this->isGameEnd = true;
-                $this->progress->is_end = true;
-                if (!$this->progress->completed) {
-                    $this->progress->completed = true;
-                }
-                $this->progress->save();
-                $this->feedbackMessage = $this->feedbackMessage ?: __('play.story_finished_congratulations');
-            } elseif ($nextChapterId) {
-                $this->loadChapter($nextChapterId);
-            } else {
-                $this->isGameEnd = true;
-                $this->progress->is_end = true;
-                $this->progress->save();
-                $this->feedbackMessage = $this->feedbackMessage ?: __('play.unexpected_story_end');
-
-                // Log unexpected end after answer
-                UserStoryLog::create([
-                    'user_id' => Auth::id(),
-                    'story_id' => $this->story->id,
-                    'chapter_id' => $this->currentChapter->id,
-                    'event_type' => 'unexpected_end',
-                    'event_description' => 'Story ended unexpectedly after answering question.',
-                ]);
             }
 
         } catch (ValidationException $e) {
             $this->feedbackMessage = $e->validator->errors()->first();
             $this->showFeedback = true;
             $this->isCorrect = false;
-
-            // Log validation error for answer
-            UserStoryLog::create([
-                'user_id' => Auth::id(),
-                'story_id' => $this->story->id,
-                'chapter_id' => $this->currentChapter->id,
-                'question_id' => $this->question->id,
-                'user_input' => $userInput,
-                'is_correct_answer' => null,
-                'event_type' => 'answer_validation_error',
-                'event_description' => 'Validation error on answer: ' . $this->feedbackMessage,
-            ]);
-
         } finally {
             $this->inputAnswer = '';
             $this->selectedOptionId = null;
@@ -334,57 +227,22 @@ class PlayStory extends Component
     {
 
         if ($this->isGameEnd) {
-            UserStoryLog::create([
-                'user_id' => Auth::id(),
-                'story_id' => $this->story->id,
-                'chapter_id' => $this->currentChapter->id,
-                'event_type' => 'story_exit_from_end_chapter',
-                'event_description' => 'User exited story after reaching an end chapter.',
-            ]);
             return redirect()->route('stories.show', $this->story->id);
         }
 
-        // If there's a next chapter linked, load it
         if ($this->currentChapter && $this->currentChapter->next_chapter_id) {
             $this->loadChapter($this->currentChapter->next_chapter_id);
         } elseif ($this->currentChapter && $this->currentChapter->is_end) {
-            // If it's an end chapter, mark the current session as ended in DB
             $this->isGameEnd = true;
-            $this->progress->is_end = true;
-            if (!$this->progress->completed) {
-                $this->progress->completed = true;
-            }
-            $this->progress->save();
             $this->feedbackMessage = __('play.end_story_congratulations');
             $this->showFeedback = true;
-
-            // Log story completion
-            UserStoryLog::create([
-                'user_id' => Auth::id(),
-                'story_id' => $this->story->id,
-                'chapter_id' => $this->currentChapter->id,
-                'event_type' => 'story_completed',
-                'event_description' => 'User completed story via continue on end chapter.',
-            ]);
-
         } else {
-            // Unexpected end of story path (no next chapter and not an end chapter)
             $this->isGameEnd = true;
-            $this->progress->is_end = true;
-            $this->progress->save();
-            $this->feedbackMessage = __('play.unexpected_story_end');
+            $this->feedbackMessage = __('play.unexpected_end_general');
             $this->showFeedback = true;
-
-            // Log unexpected end
-            UserStoryLog::create([
-                'user_id' => Auth::id(),
-                'story_id' => $this->story->id,
-                'chapter_id' => $this->currentChapter->id,
-                'event_type' => 'unexpected_end',
-                'event_description' => 'Story ended unexpectedly via continue button.',
-            ]);
         }
     }
+    
 
     /**
      * Clears the displayed feedback message and hides the feedback area.

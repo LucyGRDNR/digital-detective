@@ -5,7 +5,7 @@
     <div id="game-content-area">
        {{-- Chapter Content --}}
 <div id="chapter-content" class="mb-6">
-    <p class="text-gray-200 text-base leading-relaxed">{!! nl2br(e($currentChapter->content)) !!}</p>
+    <p class="text-gray-200 text-base leading-relaxed text-justify">{!! nl2br(e($currentChapter->content)) !!}</p>
 </div>
 
         {{-- Chapter Image --}}
@@ -18,7 +18,7 @@
         {{-- Question Section --}}
         @if($question && !$isGameEnd && !$showFeedback)
             <div class="mt-6 p-4 border border-gray-700 rounded-lg bg-gray-800">
-                <h3 class="text-xl font-semibold mb-3">{{ $question->text }}</h3>
+                <h3 class="text-xl font-semibold mb-3 text-justify">{{ $question->text }}</h3>
 
                 {{-- Hint Section --}}
                 @if($question->hint)
@@ -85,7 +85,7 @@
 
     {{-- Feedback Section --}}
     @if($showFeedback && !$isGameEnd)
-        <div class="mt-6 p-4 rounded-lg {{ $isCorrect ? 'bg-green-700/70' : 'bg-red-700/70' }}">
+        <div class="mt-6 p-4 rounded-lg bg-red-900">
             <h3 class="text-xl font-semibold mb-3 whitespace-pre-wrap">{{ $feedbackMessage }}</h3>
             <button wire:click="clearFeedbackAndContinue"
                     class="mt-4 w-full bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700">

@@ -26,14 +26,26 @@
                      class="w-full h-64 object-cover rounded-lg shadow" />
             </div>
 
-            <h1 class="text-3xl font-bold mb-4">{{ $story->name }}</h1>
+            <h1 class="text-3xl font-bold mb-4 text-center">{{ $story->name }}</h1>
 
-            <p class="text-gray-300 mb-4 text-sm md:text-base">{{ $story->description }}</p>
+            <p class="text-gray-300 mb-4 text-sm md:text-base text-justify">{{ $story->description }}</p>
 
             <div class="mb-6 text-sm md:text-base text-gray-400">
-                <p class="mb-1 text-md text-gray-300">{{ __('welcome-show.location') }}: {{ $story->place }}</p>
-                <p class="mb-1 text-md text-gray-300">{{ __('welcome-show.time') }}: {{ $story->time }} {{ __('welcome-show.minutes') }}</p>
-                <p class="mb-4 text-md text-gray-300">{{ __('welcome-show.distance') }}: {{ $story->distance }} {{ __('welcome-show.kilometers') }}</p>
+                <p class="mb-2 text-md text-gray-300">
+                <strong class="text-gray-200">
+                    <i class="fas fa-map-marker-alt mr-2 text-base"></i> {{ __('welcome-show.location') }}:
+                </strong> {{ $story->place }}
+                </p>
+                <p class="mb-2 text-md text-gray-300">
+                    <strong class="text-gray-200">
+                        <i class="fas fa-clock mr-2"></i> {{ __('welcome-show.time') }}:
+                    </strong> {{ $story->time }} {{ __('welcome-show.minutes') }}
+                </p>
+                <p class="mb-2 text-md text-gray-300">
+                    <strong class="text-gray-200">
+                        <i class="fas fa-route mr-2"></i> {{ __('welcome-show.distance') }}:
+                    </strong> {{ $story->distance }} {{ __('welcome-show.kilometers') }}
+                </p>
             </div>
 
              @auth

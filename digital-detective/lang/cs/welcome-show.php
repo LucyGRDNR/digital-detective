@@ -20,4 +20,6 @@ return [
     'resume_story' => 'Pokračovat v příběhu',
     'start_over' => 'Začít znovu',
     'start_story' => 'Začít příběh',
+    'search' => 'Hledat',
+    'clear' => 'Vymazat',
 ];

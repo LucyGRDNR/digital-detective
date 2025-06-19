@@ -19,4 +19,6 @@ return [
     'resume_story' => 'Resume Story',
     'start_over' => 'Start Over',
     'start_story' => 'Start Story',
+    'search' => 'Search',
+    'clear' => 'Clear',
 ];

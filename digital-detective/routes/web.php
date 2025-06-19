@@ -36,9 +36,6 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
 
     Route::group(['middleware' => ['role:admin']], function () {
         Route::get('/story/create', [StoryController::class, 'create'])->name('story.create');
