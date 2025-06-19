@@ -230,5 +230,52 @@ class QuestionsTableSeeder extends Seeder
                 'updated_at' => '2025-06-18 07:33:25'
             ],
         ]);
+
+        DB::table('questions')->insert([
+            [
+                'id' => 20,
+                'chapter_id' => 39,
+                'text' => 'A první otázka zní: kolik se v hale těžkých oprav nachází montážních jam?',
+                'type' => 2,
+                'wrong_feedback' => 'To bohužel není správná odpověď.',
+                'input_answer' => '5',
+                'hint' => '',
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' =>21,
+                'chapter_id' => 41,
+                'text' => 'Kolik schodů má Háčkovaná věž Čestmíra Sušky? Odpověď zadejte na jejím vrcholu.',
+                'type' => 2,
+                'wrong_feedback' => 'Nene, tolik schodů nemá. Bude to chtít asi opravdu… je nějak spočítat:)',
+                'input_answer' => '63',
+                'hint' => '',
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 22,
+                'chapter_id' => 43,
+                'text' => 'Kterou nejvyšší stavbu lze pozorovat z vrcholu Háčkované věže?',
+                'type' => 3,
+                'wrong_feedback' => 'Kdepak, tahle stavba určitě není ve vašem zorném poli nejvyšší. Rozhlédněte se ještě.',
+                'input_answer' => '',
+                'hint' => '',
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 23,
+                'chapter_id' => 45,
+                'text' => 'Jaké bylo prvotní využití areálu, v němž nyní sídlí DEPO2015?',
+                'type' => 3,
+                'wrong_feedback' => 'Hmm, to bude asi nějaký jiný areál.',
+                'input_answer' => '',
+                'hint' => 'Inspiraci hledejte v názvech ulic vedoucích k areálu.',
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+        ]);
     }
 }

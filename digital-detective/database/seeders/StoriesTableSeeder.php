@@ -45,6 +45,20 @@ class StoriesTableSeeder extends Seeder
                 'created_at' => '2025-06-18 07:33:25',
                 'updated_at' => '2025-06-18 07:33:25'
             ],
+            [
+                'id' => 3,
+                'name' => 'POZNEJ DEPO 2015',
+                'description' => 'DEPO2015 je prostor, který v sobě skrývá několik rovin - uměleckou, byznys, důraz na spolupráci, sdílení atd.
+                    Jeho areál má za sebou také docela pestrou historii, což můžete podrobněji prozkoumat v Plzeňském architektonickém manuálu (PAM)
+                    Vaším úkolem je na konkrétních místech DEPO2015 zjistit určité informace a ty zadat jako vyhodnocení jednotlivých úkolů.',
+                'image_path' => 'images/depo-story.jpg',
+                'place' => 'DEPO2015, Plzeň',
+                'place_GPS' => NULL,
+                'distance' => 2,
+                'time' => 30,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
         ]);
 }
     }

@@ -142,7 +142,7 @@ class ChaptersTableSeeder extends Seeder
                 'id' => 12,
                 'story_id' => 1,
                 'title' => 'Konec',
-                'content' => 'Bravo! I otázka z botaniky byla zodpovězena správně.' . "\n" . 'A zde také pátrání končí. Nacházíš vzkaz od nebožtíka pro jeho dědice, který si můžeš poslechnout kliknutím SEM a kromě odměny, kterou od nich jistě dostaneš, tě může hřát pocit zdárně vyřešeného případu.' . "\n" . 'Chceš vidět historii svého pátrání?',
+                'content' => 'Bravo! I otázka z botaniky byla zodpovězena správně.' . "\n" . 'A zde také pátrání končí. Nacházíš vzkaz od nebožtíka pro jeho dědice, který si můžeš poslechnout kliknutím SEM a kromě odměny, kterou od nich jistě dostaneš, tě může hřát pocit zdárně vyřešeného případu.',
                 'image_path' => NULL,
                 'is_end' => 1,
                 'next_chapter_id' => NULL,
@@ -158,9 +158,11 @@ class ChaptersTableSeeder extends Seeder
         DB::table('chapters')->where('id', 4)->update(['next_chapter_id' => 5]);
         DB::table('chapters')->where('id', 5)->update(['next_chapter_id' => 6]);
         DB::table('chapters')->where('id', 6)->update(['next_chapter_id' => 7]);
+        DB::table('chapters')->where('id', 7)->update(['next_chapter_id' => 8]);
         DB::table('chapters')->where('id', 8)->update(['next_chapter_id' => 9]);
         DB::table('chapters')->where('id', 9)->update(['next_chapter_id' => 10]);
         DB::table('chapters')->where('id', 10)->update(['next_chapter_id' => 11]);
+        DB::table('chapters')->where('id', 11)->update(['next_chapter_id' => 12]);
 
           DB::table('chapters')->insert([
             [
@@ -486,6 +488,106 @@ class ChaptersTableSeeder extends Seeder
         DB::table('chapters')->where('id', 35)->update(['next_chapter_id' => 36]);
         DB::table('chapters')->where('id', 36)->update(['next_chapter_id' => 37]);
         DB::table('chapters')->where('id', 37)->update(['next_chapter_id' => 38]);
+
+        DB::table('chapters')->insert([
+            [
+                'id' => 39,
+                'story_id' => 3,
+                'title' => 'Hala těžkých oprav',
+                'content' => 'Začněte v takzvané hale těžkých oprav, která patří Spolu s autobusovou halou k největším v celém areálu. Určitě ji snadno najdete.',
+                'image_path' => NULL,
+                'is_end' => 0,
+                'next_chapter_id' => NULL,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 40,
+                'story_id' => 3,
+                'title' => 'Pokračovat',
+                'content' => 'Ano, to je správně. Vycházkovým krokem se nyní přesuňte do dílen v depu…. a pokračujte.',
+                'image_path' => NULL,
+                'is_end' => 0,
+                'next_chapter_id' => NULL,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 41,
+                'story_id' => 3,
+                'title' => 'Háčkovaná věž',
+                'content' => 'Na nádvoří areálu narazíte na 15 metrů vysokou rozhlednu s názvem Háčkovaná věž. Je trochu křivá, trochu rezavá, ale rozhodně nepřehlédnutelná. Byla postavena v rámci výstavy Restart, která vznikla jako součást projektu Plzeň Evropské hlavní město kultury 2015. A právě s touto věží souvisí i naše další otázka',
+                'image_path' => NULL,
+                'is_end' => 0,
+                'next_chapter_id' => NULL,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 42,
+                'story_id' => 3,
+                'title' => 'Pokračovat',
+                'content' => 'Přesně tak! Snad jste si příjemně vystoupali a cítíte se svěží na další úkoly...',
+                'image_path' => NULL,
+                'is_end' => 0,
+                'next_chapter_id' => NULL,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 43,
+                'story_id' => 3,
+                'title' => 'Nejvyšší stavba',
+                'content' => 'Pokud jste vystoupali až nahoru, rozhlédněte se kolem sebe. Odpověď na další otázku máte totiž doslova na dohled.',
+                'image_path' => NULL,
+                'is_end' => 0,
+                'next_chapter_id' => NULL,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 44,
+                'story_id' => 3,
+                'title' => 'Pokračovat',
+                'content' => 'Výborně! To je správná odpověď. A kdyby to náhodou bylo náhodou, tak se na to zkuste zajít podívat ještě jednou. Pokračujte dále…',
+                'image_path' => NULL,
+                'is_end' => 0,
+                'next_chapter_id' => NULL,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 45,
+                'story_id' => 3,
+                'title' => 'Využití areálu',
+                'content' => 'Než se DEPO2015 stalo kreativním prostorem plným kultury, designu a nápadů, měl tento areál zcela jiný účel. I když si teď možná kvůli názvu areálu představíte řady zaparkovaných autobusů a zvuk startujících motorů, nenechte se zmást.
+                    Víte, k čemu původně tento prostor sloužil?',
+                'image_path' => NULL,
+                'is_end' => 0,
+                'next_chapter_id' => NULL,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 46,
+                'story_id' => 3,
+                'title' => 'Konec',
+                'content' => 'No ano! Jsi zkrátka znalci. A touto správnou odpovědí jste úspěšně završili svou cestu za poznáím prostor DEPO2015.
+                    Určitě vyzkoušejte co nejvíce toho, co prostor nabízí, a nebo ještě lépe: podílejte se na zdejším dění a přispívejte svými vlastními nápady.',
+                'image_path' => NULL,
+                'is_end' => 1,
+                'next_chapter_id' => NULL,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],       
+        ]);
+
+        DB::table('chapters')->where('id', 39)->update(['next_chapter_id' => 40]);
+        DB::table('chapters')->where('id', 40)->update(['next_chapter_id' => 41]);
+        DB::table('chapters')->where('id', 41)->update(['next_chapter_id' => 42]);
+        DB::table('chapters')->where('id', 42)->update(['next_chapter_id' => 43]);
+
+        DB::table('chapters')->where('id', 44)->update(['next_chapter_id' => 45]);
 
     }
 }

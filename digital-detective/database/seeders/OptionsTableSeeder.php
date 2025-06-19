@@ -156,5 +156,98 @@ class OptionsTableSeeder extends Seeder
                 'updated_at' => '2025-06-18 07:33:25'
             ],
         ]);
+
+        DB::table('options')->insert([
+            [
+                'id' => 16,
+                'question_id' => 22,
+                'text' => 'Katedrála svatého Bartoloměje',
+                'is_correct' => 0,
+                'next_chapter_id' => 43,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 17,
+                'question_id' => 22,
+                'text' => 'Business Centrum Bohemia',
+                'is_correct' => 1,
+                'next_chapter_id' => 44,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 18,
+                'question_id' => 22,
+                'text' => 'Městský věžový vodojem',
+                'is_correct' => 0,
+                'next_chapter_id' => 43,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 19,
+                'question_id' => 22,
+                'text' => 'Kostel Panny Marie Růžencové',
+                'is_correct' => 0,
+                'next_chapter_id' => 43,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 20,
+                'question_id' => 22,
+                'text' => 'Věžový vodojem pivovaru',
+                'is_correct' => 0,
+                'next_chapter_id' => 43,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 21,
+                'question_id' => 23,
+                'text' => 'Automobilka',
+                'is_correct' => 0,
+                'next_chapter_id' => 45,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 22,
+                'question_id' => 23,
+                'text' => 'Papírna',
+                'is_correct' => 0,
+                'next_chapter_id' => 45,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 23,
+                'question_id' => 23,
+                'text' => 'Kovárna',
+                'is_correct' => 0,
+                'next_chapter_id' => 45,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 24,
+                'question_id' => 23,
+                'text' => 'Depo MHD',
+                'is_correct' => 0,
+                'next_chapter_id' => 45,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+            [
+                'id' => 25,
+                'question_id' => 23,
+                'text' => 'Cukrovar',
+                'is_correct' => 1,
+                'next_chapter_id' => 46,
+                'created_at' => '2025-06-18 07:33:25',
+                'updated_at' => '2025-06-18 07:33:25'
+            ],
+        ]);
     }
 }

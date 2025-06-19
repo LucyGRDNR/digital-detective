@@ -17,7 +17,7 @@ return [
     'validation_answer_required' => 'Please enter an answer.',
     'validation_number_invalid' => 'Please enter a valid number.',
     'too_low' => 'That\'s too low.',
-    'too_high' => 'That\'s too high.',
+    'too_high' => 'That\'s too much.',
     'correct' => 'Correct!',
     'try_again' => 'Try again.',
     'validation_option_required' => 'Please select an option.',
