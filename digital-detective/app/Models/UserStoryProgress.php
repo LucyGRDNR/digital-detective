@@ -9,7 +9,6 @@ class UserStoryProgress extends Model
 {
     use HasFactory;
 
-
     protected $table = 'user_story_progress';
 
     protected $fillable = [
@@ -23,7 +22,6 @@ class UserStoryProgress extends Model
         'completed' => 'boolean',
         'is_end' => 'boolean',
     ];
-
 
     public function user()
     {

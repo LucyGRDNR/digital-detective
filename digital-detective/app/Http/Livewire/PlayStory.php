@@ -8,7 +8,6 @@ use App\Models\Chapter;
 use App\Models\Option;
 use App\Models\Question;
 use App\Models\UserStoryProgress;
-use App\Models\UserStoryLog;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +25,11 @@ class PlayStory extends Component
     public $showFeedback = false;
     public $hintWasShown = false;
     public $progress;
+    public $userXp;
+    public $userLevel;
+
+    const XP_PER_QUESTION = 5;
+    const XP_PER_LEVEL_THRESHOLD = 75;
 
     /**
      * Initializes the component with a given story.
@@ -38,6 +42,9 @@ class PlayStory extends Component
     {
         $this->story = $story;
         $user = Auth::user();
+
+        $this->userXp = $user->xp;
+        $this->userLevel = $user->level;
 
         $this->progress = UserStoryProgress::firstOrNew([
             'user_id' => $user->id,
@@ -111,6 +118,7 @@ class PlayStory extends Component
             $this->progress->is_end = true;
             if (!$this->progress->completed) {
                 $this->progress->completed = true;
+                $this->awardXpAndCheckLevelUp();
             }
             $this->progress->save();
         }
@@ -242,8 +250,46 @@ class PlayStory extends Component
             $this->showFeedback = true;
         }
     }
-    
 
+    /**
+     * Awards XP to the user if the story is completed for the first time
+     * and checks for level-ups.
+     *
+     * @return void
+     */
+    public function awardXpAndCheckLevelUp()
+    {
+        $user = Auth::user(); 
+
+        $numQuestions = 0;
+
+        foreach ($this->story->chapters as $chapter) {
+            if ($chapter->question) { 
+                $numQuestions++;
+            }
+        }
+
+        $xpGained = $numQuestions * self::XP_PER_QUESTION;
+
+
+        DB::transaction(function () use ($user, $xpGained) {
+            $initialUserXp = $user->xp;
+            $initialUserLevel = $user->level;
+
+            $user->xp += $xpGained;
+
+            $newUserLevel = floor($user->xp / self::XP_PER_LEVEL_THRESHOLD) + 1;
+
+            $user->level = $newUserLevel;
+            $user->save();
+
+            $this->userXp = $user->xp;
+            $this->userLevel = $user->level;
+
+
+        });   
+    }
+    
     /**
      * Clears the displayed feedback message and hides the feedback area.
      * If the game has ended, redirects.

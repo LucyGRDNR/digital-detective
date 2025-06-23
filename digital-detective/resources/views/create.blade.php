@@ -23,12 +23,10 @@
             <form id="story-creation-form" method="POST" action="{{ route('stories.store') }}" enctype="multipart/form-data" class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg my-8">
                 @csrf
 
-                {{-- Story Details --}}
                 <div class="mb-6 p-4 border rounded-lg bg-gray-50">
                     <h3 class="text-lg font-semibold mb-4 text-gray-800">{{ __('create-edit.story_details') }}</h3>
                     <div class="space-y-4">
 
-                        {{-- Story Name --}}
                         <div>
                             <label for="story-name" class="block text-sm font-medium text-gray-700 mb-1">
                                 {{ __('create-edit.story_name') }}:<span class="text-red-500">*</span>
@@ -42,7 +40,6 @@
                             @enderror
                         </div>
 
-                        {{-- Story Description  --}}
                         <div>
                             <label for="story-description" class="block text-sm font-medium text-gray-700 mb-1">
                                 {{ __('create-edit.story_description') }}:<span class="text-red-500">*</span>
@@ -56,7 +53,6 @@
                             @enderror
                         </div>
 
-                        {{-- Story Image --}}
                         <div>
                             <label for="image-upload" class="block text-sm font-medium text-gray-700 mb-1">
                                 {{ __('create-edit.story_main_image') }}:<span class="text-red-500">*</span>
@@ -72,7 +68,6 @@
                             <img id="story-image-tag" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" class="max-w-full h-auto rounded-md" alt="{{ __('create-edit.current_story_image') }}">
                         </div>
 
-                        {{-- Story Place  --}}
                         <div>
                             <label for="story-place" class="block text-sm font-medium text-gray-700 mb-1">
                                 {{ __('create-edit.story_place') }}:<span class="text-red-500">*</span>
@@ -86,8 +81,7 @@
                             @enderror
                         </div>
 
-                        {{-- Place GPS (Optional) --}}
-                        <div>
+                        <div style="display: none;">
                             <label for="place-gps" class="block text-sm font-medium text-gray-700 mb-1">
                                 {{ __('create-edit.story_place_gps_optional') }}
                             </label>
@@ -100,7 +94,7 @@
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {{-- Distance Input --}}
+
                                 <div>
                                     <label for="story-distance" class="block text-sm font-medium text-gray-700 mb-1">
                                         {{ __('create-edit.story_distance_km') }}:<span class="text-red-500">*</span>
@@ -113,7 +107,6 @@
                                     @enderror
                                 </div>
 
-                                {{-- Estimated Time Input --}}
                                 <div>
                                     <label for="story-time" class="block text-sm font-medium text-gray-700 mb-1">
                                         {{ __('create-edit.story_estimated_time_minutes') }}:<span class="text-red-500">*</span>
@@ -129,20 +122,16 @@
                         </div>
                     </div>
 
-                {{-- Chapters Container --}}
                 <div id="chapters-container" class="space-y-6"></div>
 
-                {{-- Hidden input for chapters data --}}
                 <input type="hidden" name="chapters_data" id="chapters-data-input">
 
-                {{-- Container for chapter and action buttons --}}
                 <div class="flex justify-between items-center mt-8">
-                    {{-- New Chapter Button --}}
+
                     <button type="button" onclick="addChapter()" class="cursor-pointer bg-gray-800 hover:bg-blue-700 text-white px-8 py-3 rounded-lg transition duration-200 ease-in-out">
                         <i class="fas fa-plus mr-2"></i> {{ __('create-edit.add_chapter_button') }}
                     </button>
 
-                    {{-- Save Story button --}}
                     <div class="flex space-x-4">
                         <button type="submit" onclick="prepareAndSubmitStory(event)"
                             class="cursor-pointer bg-gray-800 hover:bg-green-800 text-white px-8 py-3 rounded-lg shadow-lg transition duration-200 ease-in-out">
@@ -151,37 +140,29 @@
                     </div>
                 </div>
             </form>
-            {{-- TEMPLATES --}}
-            {{-- Chapter Template --}}
+
             <template id="chapter-template">
                 <div class="border rounded-lg p-6 space-y-4 chapter-block relative bg-white shadow-sm">
 
-                    {{-- Stores a temporary unique ID for the chapter --}}
                     <input type="hidden" class="chapter-temp-id">
 
-                    {{-- Chapter Number Display --}}
                     <h3 class="text-lg font-semibold mb-4 text-gray-800 flex justify-between items-center">
                         <span class="flex-shrink-0">{{ __('create-edit.chapter') }} <span class="chapter-number"></span></span>
                         <span class="chapter-next-display text-sm font-normal text-gray-500 text-right flex-grow flex-shrink min-w-0 break-words ml-4"></span>
                     </h3>
 
-                    {{-- Delete Chapter Button --}}
-
-                    {{-- Chapter Title --}}
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
                         <label for="chapter-title" class="font-semibold text-gray-700 sm:w-1/4">{{ __('create-edit.chapter_title') }}:<span class="text-red-500">*</span></label>
                         <input type="text" maxlength="40" class="chapter-title border border-gray-300 p-2 rounded-md w-full sm:w-3/4 focus:ring-blue-500 focus:border-blue-500 text-gray-700" required>
                         <p class="error-chapter-title text-red-500 text-xs mt-1"></p>
                     </div>
 
-                    {{-- Chapter Content --}}
                     <div>
                         <label for="chapter-content" class="block font-semibold text-gray-700 mb-1">{{ __('create-edit.chapter_content') }}:<span class="text-red-500">*</span></label>
                         <textarea class="chapter-content border border-gray-300 p-2 rounded-md w-full focus:ring-blue-500 focus:border-blue-500 text-gray-700" rows="4" required></textarea>
                         <p class="error-chapter-content text-red-500 text-xs mt-1"></p>
                     </div>
 
-                     {{-- Chapter Image (Optional) --}}
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('create-edit.chapter_upload_image_optional') }}</label>
                         <div class="current-chapter-image-container mb-2 hidden">
@@ -195,13 +176,11 @@
                         <p class="error-chapter-image-upload text-red-500 text-xs mt-1"></p>
                     </div>
 
-                    {{-- End Story Checkbox --}}
                     <div class="flex items-center mt-4">
                         <input type="checkbox" class="is-end-chapter mr-2 h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border border-gray-300 cursor-pointer">
                         <label class="font-semibold text-gray-700 cursor-pointer">{{ __('create-edit.is_end_chapter') }}</label>
                     </div>
 
-                    {{-- Next Chapter Selection Section (conditionally hidden by JS) --}}
                     <div class="next-chapter-section mt-4 hidden">
                         <label for="next-chapter" class="block font-semibold text-gray-700 mb-1">{{ __('create-edit.next_chapter_title') }}:</label>
                         <select class="next-chapter cursor-pointer border border-gray-300 p-2 rounded-md w-full focus:ring-blue-500 focus:border-blue-500 text-gray-700">
@@ -209,7 +188,6 @@
                         <p class="error-next-chapter text-red-500 text-xs mt-1"></p>
                     </div>
 
-                    {{-- "Add Question?" Section (conditionally hidden by JS) --}}
                     <div class="has-question-section mt-4 hidden">
                         <label for="has-question" class="block font-semibold text-gray-700 mb-1">{{ __('create-edit.add_question') }}</label>
                         <select class="has-question cursor-pointer border border-gray-300 rounded-md p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-700">
@@ -218,25 +196,21 @@
                         </select>
                     </div>
 
-                    {{-- Question Details Section (conditionally hidden by JS) --}}
                     <div class="question-section hidden space-y-4 p-4 border rounded-lg bg-gray-100 mt-4">
                         <h4 class="text-md font-semibold text-gray-800">{{ __('create-edit.question_details') }}</h4>
 
-                        {{-- Question Text --}}
                         <div>
                             <label for="question-text" class="block text-sm font-medium text-gray-700 mb-1">{{ __('create-edit.question_text') }}:<span class="text-red-500">*</span></label>
                             <textarea class="question-text border border-gray-300 p-2 rounded-md w-full focus:ring-blue-500 focus:border-blue-500 text-gray-700" rows="2" required></textarea>
                             <p class="error-question-text text-red-500 text-xs mt-1"></p>
                         </div>
 
-                        {{-- Hint for Question (Optional) --}}
                         <div>
                             <label for="question-hint" class="block text-sm font-medium text-gray-700 mb-1">{{ __('create-edit.question_hint_optional') }}:</label>
                             <input type="text" class="question-hint border border-gray-300 p-2 rounded-md w-full focus:ring-blue-500 focus:border-blue-500 text-gray-700">
                             <p class="error-question-hint text-red-500 text-xs mt-1"></p>
                         </div>
 
-                        {{-- Question Type Selection (Text & Number & Multiple Choice) --}}
                         <div>
                             <label for="question-type" class="block text-sm font-medium text-gray-700 mb-1">{{ __('create-edit.answer_type') }}:<span class="text-red-500">*</span></label>
                             <select class="question-type cursor-pointer border border-gray-300 rounded-md p-2 w-full focus:ring-blue-500 focus:border-blue-500 text-gray-700" required>
@@ -248,14 +222,12 @@
                             <p class="error-question-type text-red-500 text-xs mt-1"></p>
                         </div>
 
-                        {{-- Input Answer Section --}}
                         <div class="input-answer-section hidden mt-4">
                             <label for="input-answer" class="block text-sm font-medium text-gray-700 mb-1">{{ __('create-edit.correct_answer') }}:<span class="text-red-500">*</span></label>
                             <input type="text" class="input-answer border border-gray-300 p-2 rounded-md w-full focus:ring-blue-500 focus:border-blue-500 text-gray-700" required>
                             <p class="error-input-answer text-red-500 text-xs mt-1"></p>
                         </div>
 
-                        {{-- MCQ Answer Section --}}
                         <div class="mcq-answer-section hidden mt-4">
                             <h5 class="text-md font-semibold text-gray-700 mb-2">{{ __('create-edit.options_max_5') }}</h5>
                             <div class="options space-y-3">
@@ -266,7 +238,6 @@
                             <p class="error-options-count text-red-500 text-xs mt-1"></p>
                         </div>
 
-                        {{-- Wrong Answer Feedback --}}
                         <div>
                             <label for="wrong-feedback" class="block text-sm font-medium text-gray-700 mb-1">{{ __('create-edit.wrong_answer_feedback') }}:<span class="text-red-500">*</span></label>
                             <textarea class="wrong-feedback border border-gray-300 p-2 rounded-md w-full focus:ring-blue-500 focus:border-blue-500 text-gray-700" rows="2" required></textarea>
@@ -274,7 +245,6 @@
                         </div>
                     </div>
 
-                    {{-- Delete Chapter Button --}}
                     <button type="button"
                         class="delete-chapter cursor-pointer absolute top-2 right-2 text-xl text-red-600 hover:text-red-800 font-bold transition duration-200 ease-in-out"
                         title="{{ __('create-edit.delete_chapter') }}">
@@ -283,27 +253,22 @@
                 </div>
             </template>
 
-            {{-- Option Template --}}
             <template id="option-template">
                 <div class="border border-gray-200 rounded-md p-3 relative option-item">
 
-                    {{-- Option Text --}}
                     <input type="text" class="option-text border border-gray-300 p-2 rounded-md w-full mb-2 text-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700" placeholder="{{ __('create-edit.option_text_placeholder') }}" required>
                     <p class="error-option-text text-red-500 text-xs mt-1"></p>
 
-                    {{-- 'Correct Answer' Checkbox --}}
                     <div class="flex items-center mb-2">
                         <input type="checkbox" class="is-correct mr-2 h-4 w-4 text-green-600 rounded focus:ring-blue-500 border border-gray-300 cursor-pointer">
                         <label class="text-sm font-medium text-gray-700 cursor-pointer">{{ __('create-edit.correct_answer') }}</label>
                     </div>
 
-                    {{-- 'Go to chapter' Select for this option --}}
                     <label class="block text-xs font-medium text-gray-600 mb-1">{{ __('create-edit.go_to_chapter') }}:</label>
                     <select class="option-next cursor-pointer border border-gray-300 p-2 rounded-md w-full text-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700" required>
                     </select>
                     <p class="error-option-next text-red-500 text-xs mt-1"></p>
 
-                    {{-- Button to delete this specific option --}}
                     <button type="button" class="delete-option cursor-pointer absolute top-2 right-2 text-lg text-red-500 hover:text-red-700 font-bold transition duration-200 ease-in-out" title="{{ __('create-edit.remove_option') }}">
                         &times;
                     </button>

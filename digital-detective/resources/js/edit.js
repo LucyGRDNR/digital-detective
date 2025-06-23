@@ -1,12 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
-            let chapterCounter = 0; // Used for numbering chapters visually.
-            let tempChapterIdCounter = 0; // For unique temporary IDs for new chapters/options.
+            let chapterCounter = 0;
+            let tempChapterIdCounter = 0;
 
-            // Get references to key DOM elements
-            const chaptersContainer = document.getElementById('chapters-container'); // Container for all chapter blocks
-            const chapterTemplate = document.getElementById('chapter-template'); // Template for cloning new chapters
-            const optionTemplate = document.getElementById('option-template'); // Template for cloning new MCQ options
-            const form = document.getElementById('story-edit-form'); // Changed from creation to edit form
+            const chaptersContainer = document.getElementById('chapters-container');
+            const chapterTemplate = document.getElementById('chapter-template');
+            const optionTemplate = document.getElementById('option-template');
+            const form = document.getElementById('story-edit-form');
             const chaptersDataInput = document.getElementById('chapters-data-input');
             const chapterImagesToDeleteInput = document.getElementById('chapter-images-to-delete-input');
             const deletedQuestionIdsInput = document.getElementById('deleted-question-ids-input');
@@ -17,9 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let deletedQuestionIds = [];
             let deletedOptionIds = [];
 
-            // Inject the Laravel $story object directly into JavaScript
             const initialStoryData = window.initialStoryData;
-            // Access translations from the global Laravel object
             const lang = window.Laravel.lang;
 
                const updateImagePreview = (inputElement, imgElement, previewContainer) => {
@@ -33,9 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     };
                     reader.readAsDataURL(inputElement.files[0]);
                 } else if (imgElement && previewContainer) {
-                    // If no file selected, and there was an original image, show it
-                    // Otherwise, hide the preview
-                    if (imgElement.dataset.originalSrc) { // If you store original src in data-original-src
+                    if (imgElement.dataset.originalSrc) {
                         imgElement.src = imgElement.dataset.originalSrc;
                         previewContainer.classList.remove('hidden');
                     } else {
@@ -45,10 +40,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             };
 
-            // Story Image Preview Handler
             const storyImageUploadInput = document.getElementById('image-upload');
-            const storyImageTag = document.getElementById('story-image-tag'); // Make sure your <img> tag has id="story-image-tag"
-            const currentStoryImagePreviewDiv = document.getElementById('current-story-image-preview'); // The div containing the image preview
+            const storyImageTag = document.getElementById('story-image-tag');
+            const currentStoryImagePreviewDiv = document.getElementById('current-story-image-preview');
 
             if (storyImageUploadInput && storyImageTag) {
                 storyImageUploadInput.addEventListener('change', function() {
@@ -79,12 +73,10 @@ document.addEventListener('DOMContentLoaded', function() {
              * @returns {string} HTML string of <option> elements.
              */
             function getChapterOptionsHTML(currentChapterId = '') {
-                let options = `<option value="">${lang.select_chapter}</option>`; // Default empty option
+                let options = `<option value="">${lang.select_chapter}</option>`;
                 document.querySelectorAll('.chapter-block').forEach(block => {
                     const id = block.dataset.chapterId;
-                    // Get title, or use "Chapter X" if title is empty, for the option text
                     const title = block.querySelector('.chapter-title').value.trim() || `${lang.chapter} ${block.querySelector('.chapter-number').textContent}`;
-                    // Disable the current chapter itself from its own 'next chapter' dropdown
                     const disabled = id === currentChapterId ? 'disabled' : '';
                     options += `<option value="${id}" ${disabled}>${title}</option>`;
                 });
@@ -100,35 +92,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('.chapter-block').forEach(block => {
                     const currentId = block.dataset.chapterId;
 
-                    // Update the main 'Next Chapter' select for the current chapter block
                     const nextSelect = block.querySelector('.next-chapter');
-                    const prevValue = nextSelect.value; // Store previous selection to try and restore it
-                    nextSelect.innerHTML = getChapterOptionsHTML(currentId); // Rebuild options
-                    // Restore previous selection if it's still a valid option, otherwise clear the selection
+                    const prevValue = nextSelect.value;
+                    nextSelect.innerHTML = getChapterOptionsHTML(currentId);
                     if ([...nextSelect.options].some(opt => opt.value === prevValue)) {
                         nextSelect.value = prevValue;
                     } else {
                         nextSelect.value = '';
                     }
 
-                    // Update 'Go to chapter' selects within MCQ options for this chapter
                     block.querySelectorAll('.option-next').forEach(select => {
                         const optionParentDiv = select.closest('.option-item');
 
-                        const prev = select.value; // Store previous selection to try and restore it
+                        const prev = select.value;
                         const isCorrectCheckbox = optionParentDiv.querySelector('.is-correct');
                         const hasQuestionSelect = block.querySelector('.has-question');
                         const questionTypeSelect = block.querySelector('.question-type');
 
-                        // Apply logic for MCQ options ONLY
                         if (hasQuestionSelect.value === '1' && questionTypeSelect.value === '3') {
-                             select.innerHTML = getChapterOptionsHTML(currentId); // Rebuild options
+                             select.innerHTML = getChapterOptionsHTML(currentId);
 
-                            // Check if any correct option exists in this chapter's MCQ
                             const anyCorrect = [...block.querySelectorAll('.option-item')].some(opt => opt.querySelector('.is-correct').checked);
 
                             if (isCorrectCheckbox.checked) {
-                                // Correct options must have a next chapter selected
                                 select.disabled = false;
                                 select.required = true;
                                 if ([...select.options].some(opt => opt.value === prev)) {
@@ -138,12 +124,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }
                             } else {
                                 if (anyCorrect) {
-                                    // If there's at least one correct option, incorrect options MUST go back to the current chapter
-                                    select.value = currentId; // Force incorrect options to current chapter
+                                    select.value = currentId;
                                     select.disabled = true;
-                                    select.required = false; // Not required as it's forced
+                                    select.required = false;
                                 } else {
-                                    // If no correct options, incorrect options are enabled and not required
                                     select.disabled = false;
                                     select.required = false;
                                     if ([...select.options].some(opt => opt.value === prev)) {
@@ -154,8 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }
                             }
                         } else {
-                            // If not an MCQ question, ensure selects are enabled and retain value
-                            select.innerHTML = getChapterOptionsHTML(currentId); // Rebuild options
+                            select.innerHTML = getChapterOptionsHTML(currentId);
                             select.disabled = false;
                             select.required = false;
                             if ([...select.options].some(opt => opt.value === prev)) {
@@ -166,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
 
-                    // Re-apply required attributes for the main next chapter select after options are updated
                     updateNextChapterRequired(block);
                 });
             }
@@ -183,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const nextChapterSection = block.querySelector('.next-chapter-section');
                 const nextChapterSelect = block.querySelector('.next-chapter');
 
-                // Hide if it's an end chapter OR has a multiple choice question (MCQ handles branching)
                 const shouldHide = isEndChapter || (hasQuestion && questionType === '3');
 
                 nextChapterSection.classList.toggle('hidden', shouldHide);
@@ -204,15 +185,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 const hasQuestionSelect = block.querySelector('.has-question');
                 const questionSection = block.querySelector('.question-section');
 
-                // If it's an end chapter, hide everything related to questions
                 if (isEndChapter) {
                     hasQuestionSection.classList.add('hidden');
-                    hasQuestionSelect.value = '0'; // Reset "Add Question?" to No
-                    questionSection.classList.add('hidden'); // Ensure question details are hidden
-                    resetQuestionFields(block); // Clear all question-related inputs
+                    hasQuestionSelect.value = '0';
+                    questionSection.classList.add('hidden');
+                    resetQuestionFields(block);
                 } else {
                     hasQuestionSection.classList.remove('hidden');
-                    // Trigger change event for 'has-question' to re-evaluate its own visibility state
                     hasQuestionSelect.dispatchEvent(new Event('change'));
                 }
             }
@@ -245,15 +224,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const mcqAnswerSection = block.querySelector('.mcq-answer-section');
                 const inputAnswerField = inputAnswerSection.querySelector('.input-answer');
 
-                // Determine if input section should be shown (Text Input or Number Input)
                 const showInputSections = (hasQuestion && (questionType === '1' || questionType === '2'));
                 inputAnswerSection.classList.toggle('hidden', !showInputSections);
 
-                // Determine if MCQ section should be shown
                 const showMcqSection = (hasQuestion && questionType === '3');
                 mcqAnswerSection.classList.toggle('hidden', !showMcqSection);
 
-               // Manage required status for input answer field and its type
                 if (inputAnswerField) {
                     inputAnswerField.required = showInputSections;
                     if (showInputSections) {
@@ -264,13 +240,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         }
                     } else {
-                        inputAnswerField.value = ''; // Clear value if hidden
+                        inputAnswerField.value = '';
                     }
                 }
 
-                // Clear MCQ options if switching from MCQ or no question
                 if (!showMcqSection) {
-                    // Collect option IDs for deletion if moving away from MCQ
                     block.querySelectorAll('.mcq-answer-section .option-db-id').forEach(input => {
                         if (input.value && !deletedOptionIds.includes(input.value)) {
                             deletedOptionIds.push(input.value);
@@ -278,7 +252,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                     mcqAnswerSection.querySelector('.options').innerHTML = '';
                 } else if (showMcqSection) {
-                    // Ensure at least two options for MCQ when switching to it or initially setting up
                     const optionsCount = mcqAnswerSection.querySelector('.options').children.length;
                     for (let i = optionsCount; i < 2; i++) {
                         addOption(mcqAnswerSection.querySelector('.options'));
@@ -298,11 +271,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const hasQuestion = block.querySelector('.has-question').value === '1';
                 const questionType = block.querySelector('.question-type').value;
                 const wrongFeedbackInput = block.querySelector('.wrong-feedback');
-                // Get the parent div that wraps both the label and the textarea
                 const feedbackContainer = wrongFeedbackInput ? wrongFeedbackInput.closest('div') : null;
 
                 if (hasQuestion) {
-                    if (questionType === '3') { // If it's an MCQ
+                    if (questionType === '3') {
                         const options = block.querySelectorAll('.options > .option-item');
                         let hasCorrectOption = false;
                         options.forEach(optionDiv => {
@@ -311,24 +283,20 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         });
 
-                        // Wrong feedback is required IF there is at least one correct option
                         wrongFeedbackInput.required = hasCorrectOption;
-                        // Hide/show the entire container based on hasCorrectOption
                         feedbackContainer.classList.toggle('hidden', !hasCorrectOption);
 
-                        // If hidden, clear its value to prevent it from being sent if it shouldn't be required
                         if (!hasCorrectOption) {
                             wrongFeedbackInput.value = '';
                         }
                     } else {
-                        // For text/number questions, feedback is always required if a question is present
                         wrongFeedbackInput.required = true;
-                        feedbackContainer.classList.remove('hidden'); // Ensure visible
+                        feedbackContainer.classList.remove('hidden');
                     }
                 } else {
                     wrongFeedbackInput.required = false;
-                    wrongFeedbackInput.value = ''; // Clear value if no question
-                    feedbackContainer.classList.add('hidden'); // Hide if no question
+                    wrongFeedbackInput.value = '';
+                    feedbackContainer.classList.add('hidden');
                 }
             }
 
@@ -388,18 +356,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (isEndChapter) {
                     displayText = lang.ends_story;
                 } else if (hasQuestion && questionType === '3') {
-                    // For MCQ, each option can branch, so the chapter itself doesn't have next chapter
                     displayText = lang.branches_with_question;
                 } else if (nextChapterSelect.value) {
-                    // Find the title of the selected next chapter
                     const selectedOption = nextChapterSelect.options[nextChapterSelect.selectedIndex];
                     const nextChapterTitle = selectedOption ? selectedOption.textContent.trim() : 'Unselected';
 
-                    // Prevent displaying "Chapter X" if the actual title is available
                     if (nextChapterTitle && !nextChapterTitle.startsWith(lang.chapter + ' ')) {
                         displayText = `${lang.follows_chapter} ${nextChapterTitle}`;
                     } else if (selectedOption && selectedOption.value) {
-                         // Displays "Chapter X" if title is empty/generic, but is still selected
                         const nextBlock = document.querySelector(`.chapter-block[data-chapter-id="${selectedOption.value}"]`);
                         if (nextBlock) {
                             const nextNumber = nextBlock.querySelector('.chapter-number').textContent;
@@ -422,54 +386,48 @@ document.addEventListener('DOMContentLoaded', function() {
              */
             window.addChapter = function(chapterData = null) {
                 const clone = chapterTemplate.content.cloneNode(true);
-                const block = clone.querySelector('.chapter-block'); // Get the main chapter block element
+                const block = clone.querySelector('.chapter-block');
 
-                // Use DB ID or generate a unique ID for the new chapter, used for JS logic
-                // and associating uploaded images with chapters on backend
                 let chapterId;
                 if (chapterData && chapterData.id) {
-                    chapterId = chapterData.id; // Use existing DB ID
-                    block.querySelector('.chapter-db-id').value = chapterId; // Store original DB ID
+                    chapterId = chapterData.id;
+                    block.querySelector('.chapter-db-id').value = chapterId;
                 } else {
-                    chapterId = `chapter-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`; // New temp ID
+                    chapterId = `chapter-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
                 }
-                block.dataset.chapterId = chapterId; // Set data attribute for consistent ID tracking
-                chapterCounter++; // Increment global chapter counter
+                block.dataset.chapterId = chapterId;
+                chapterCounter++;
                 block.querySelector('.chapter-number').textContent = chapterCounter;
-                block.querySelector('.chapter-temp-id').value = chapterId; // Store also in hidden input
+                block.querySelector('.chapter-temp-id').value = chapterId;
 
-               // Set the 'name' and 'id' attributes for the chapter image input
                 const chapterImageInput = block.querySelector('.chapter-image-upload');
                 if (chapterImageInput) {
                     chapterImageInput.name = `chapter_images[${chapterId}]`;
                     chapterImageInput.id = `chapter-image-${chapterId}`;
                 }
 
-                // Populate fields if chapterData is provided (editing existing)
                 if (chapterData) {
                     block.querySelector('.chapter-title').value = chapterData.title || '';
                     block.querySelector('.chapter-content').value = chapterData.content || '';
                     block.querySelector('.is-end-chapter').checked = chapterData.is_end;
 
-                    // Populate existing chapter image
                     const currentChapterImageContainer = block.querySelector('.current-chapter-image-container');
                     const currentChapterImage = currentChapterImageContainer.querySelector('img');
                     const deleteChapterImageButton = currentChapterImageContainer.querySelector(
-                        '.delete-chapter-image-button'); // Get the button
+                        '.delete-chapter-image-button');
                     if (chapterData.image_path) {
                         currentChapterImage.src = baseImageUrl  + chapterData.image_path;
                         currentChapterImageContainer.classList.remove('hidden');
-                        deleteChapterImageButton.classList.remove('hidden'); // Show delete button if image exists
-                        chapterImageInput.required = false; // Not required if existing image
+                        deleteChapterImageButton.classList.remove('hidden');
+                        chapterImageInput.required = false;
                     } else {
                         currentChapterImageContainer.classList.add('hidden');
                         currentChapterImage.src = '';
-                        deleteChapterImageButton.classList.add('hidden'); // Hide delete button if no image
-                        chapterImageInput.required = false; // Not required for new chapters initially
+                        deleteChapterImageButton.classList.add('hidden');
+                        chapterImageInput.required = false;
                     }
 
 
-                    // Populate question details if available
                     if (chapterData.question) {
                         block.querySelector('.has-question').value = '1';
                         block.querySelector('.question-db-id').value = chapterData.question.id || '';
@@ -478,14 +436,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         block.querySelector('.question-type').value = chapterData.question.type;
                         block.querySelector('.wrong-feedback').value = chapterData.question.wrong_feedback || '';
 
-                        if (chapterData.question.type == 1 || chapterData.question.type == 2) { // Input type
+                        if (chapterData.question.type == 1 || chapterData.question.type == 2) {
                             block.querySelector('.input-answer').value = chapterData.question.input_answer || '';
-                        } else if (chapterData.question.type == 3) { // Multiple Choice type
+                        } else if (chapterData.question.type == 3) {
                             if (chapterData.question.options && chapterData.question.options.length > 0) {
-                                // Clear existing options before adding loaded ones to prevent duplicates
                                 block.querySelector('.mcq-answer-section .options').innerHTML = '';
                                 chapterData.question.options.forEach(option => {
-                                    addOption(block.querySelector('.mcq-answer-section .options'), option); // Pass options container and option data
+                                    addOption(block.querySelector('.mcq-answer-section .options'), option);
                                 });
                             }
                         }
@@ -493,29 +450,25 @@ document.addEventListener('DOMContentLoaded', function() {
                         block.querySelector('.has-question').value = '0';
                     }
 
-                    // If chapter is not an end and not an MCQ, set next chapter
                     if (!chapterData.is_end && !(chapterData.question && chapterData.question.type == 3) && chapterData
                         .next_chapter_id) {
                         block.querySelector('.next-chapter').dataset.initialValue = chapterData
-                            .next_chapter_id; // Store DB ID
+                            .next_chapter_id;
                     }
                 }
 
                 setupChapterEventListeners(block);
 
-                chaptersContainer.appendChild(block); // Add the new chapter block
+                chaptersContainer.appendChild(block);
 
                 updateChapterOptions();
                 updateDeleteChapterButtons();
                 updateChapterNextDisplay(block);
 
-                // Trigger change events to initialize correct visibility based on loaded data
                 block.querySelector('.is-end-chapter').dispatchEvent(new Event('change'));
                 block.querySelector('.has-question').dispatchEvent(new Event('change'));
 
                 const allChapters = document.querySelectorAll('.chapter-block');
-                // Auto-assign the newly added chapter as the 'next chapter' for the previous chapter,
-                // only if the previous chapter is not end chapter/MCQ and the user hasn't manually selected next chapter
                 if (allChapters.length > 1) {
                     const prevBlock = allChapters[allChapters.length - 2];
                     const prevIsEndChapter = prevBlock.querySelector('.is-end-chapter').checked;
@@ -524,7 +477,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     if (!prevIsEndChapter && !(prevHasQuestion && prevQuestionType === '3')) {
                         const prevNextSelect = prevBlock.querySelector('.next-chapter');
-                        // If the previous chapter's 'next chapter' selection is empty, auto-fill with the new chapter's ID
                         if (!prevNextSelect.value) {
                             prevNextSelect.value = chapterId;
                             updateChapterNextDisplay(prevBlock);
@@ -541,15 +493,12 @@ document.addEventListener('DOMContentLoaded', function() {
              * @param {HTMLElement} block The chapter block element to set up listeners for.
              */
             function setupChapterEventListeners(block) {
-                  // Event listener for chapter title changes to update dropdown options for all chapters
                 const titleInput = block.querySelector('.chapter-title');
                 titleInput.addEventListener('input', function() {
                     updateChapterOptions();
-                    // Update all chapter displays
                     document.querySelectorAll('.chapter-block').forEach(b => updateChapterNextDisplay(b));
                 });
 
-                // Event listener for 'Is this the end of a story path?' checkbox
                 const isEndChapterCheckbox = block.querySelector('.is-end-chapter');
                 isEndChapterCheckbox.addEventListener('change', function() {
                     toggleNextChapterVisibility(block);
@@ -559,19 +508,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateWrongFeedbackRequired(block);
                 });
 
-                // Event listener for 'Add Question?' select
                 const hasQuestionSelect = block.querySelector('.has-question');
                 hasQuestionSelect.addEventListener('change', function() {
                     const hasQuestion = this.value === '1';
-                    block.querySelector('.question-section').classList.toggle('hidden', !hasQuestion); // Show/hide question details
-                    // Trigger question type change to ensure correct answer sections are shown
+                    block.querySelector('.question-section').classList.toggle('hidden', !hasQuestion);
                     block.querySelector('.question-type').dispatchEvent(new Event('change'));
                     updateWrongFeedbackRequired(block);
                     toggleNextChapterVisibility(block);
                     updateNextChapterRequired(block);
                     updateChapterNextDisplay(block);
 
-                    // If question is removed, add its DB ID to deleted list
                     if (!hasQuestion) {
                         const questionDbId = block.querySelector('.question-db-id').value;
                         if (questionDbId && !deletedQuestionIds.includes(questionDbId)) {
@@ -580,7 +526,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
 
-                 // Event listener for 'Question Type' select
                 const questionTypeSelect = block.querySelector('.question-type');
                 questionTypeSelect.addEventListener('change', function() {
                     toggleAnswerTypeVisibility(block);
@@ -590,13 +535,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateWrongFeedbackRequired(block);
                 });
 
-               // Event listener for MCQ 'Add Option' button
                 const addOptionBtn = block.querySelector('.add-option');
                 addOptionBtn.addEventListener('click', function() {
                     const optionsContainer = block.querySelector('.options');
-                    if (optionsContainer.children.length < 5) { // Max 5 options allowed
+                    if (optionsContainer.children.length < 5) {
                         addOption(block);
-                        updateChapterOptions(); // Update all chapter dropdowns
+                        updateChapterOptions();
                         updateWrongFeedbackRequired(block);
                     }
                     updateAddOptionVisibility(block);
@@ -604,13 +548,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateChapterNextDisplay(block);
                 });
 
-                // Event delegation for deleting options within this chapter
-                // Listens on the parent '.options' container, but acts on '.delete-option' clicks
                 block.querySelector('.options').addEventListener('click', function(e) {
                     if (e.target.classList.contains('delete-option')) {
                         const optionItem = e.target.closest('.option-item');
                         if (optionItem) {
-                            optionItem.remove(); // Remove the option from the DOM
+                            optionItem.remove();
                             updateChapterOptions();
                             updateAddOptionVisibility(block);
                             updateDeleteOptionButtons(block);
@@ -622,7 +564,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
 
-                // Event delegation for 'is-correct' checkbox change within MCQ options
                 block.querySelector('.options').addEventListener('change', function(e) {
                     if (e.target.classList.contains('is-correct')) {
                         updateChapterOptions();
@@ -634,13 +575,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
 
-                // Event listener for 'next-chapter' select
                 const nextChapterSelect = block.querySelector('.next-chapter');
                 nextChapterSelect.addEventListener('change', function() {
                     updateChapterNextDisplay(block);
                 });
 
-                // Chapter image input change listener for preview
                 const chapterImageUploadInput = block.querySelector('.chapter-image-upload');
                 const currentChapterImageContainer = block.querySelector('.current-chapter-image-container');
                 const previewImage = currentChapterImageContainer.querySelector('img');
@@ -655,7 +594,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         reader.onload = function(e) {
                             previewImage.src = e.target.result;
                             currentChapterImageContainer.classList.remove('hidden');
-                            deleteChapterImageButton.classList.remove('hidden'); // Show delete button for new image
+                            deleteChapterImageButton.classList.remove('hidden');
                         };
                         reader.readAsDataURL(this.files[0]);
 
@@ -663,8 +602,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             deletedChapterImagePaths.push(oldImagePath);
                         }
                     } else {
-                        // If file input cleared and no new file selected, hide preview and remove from deletion list if it was new
-                        if (!oldImagePath) { // Only if it was a new image being cleared
+                        if (!oldImagePath) {
                             previewImage.src = '';
                             currentChapterImageContainer.classList.add('hidden');
                             deleteChapterImageButton.classList.add('hidden');
@@ -672,7 +610,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
 
-                // Chapter image delete button listener
                 if (deleteChapterImageButton) {
                     deleteChapterImageButton.addEventListener('click', function() {
                        const oldImagePath = previewImage.src.includes('storage/') ? previewImage.src.split('/storage/').pop() : null;
@@ -680,23 +617,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (oldImagePath && !deletedChapterImagePaths.includes(oldImagePath)) {
                             deletedChapterImagePaths.push(oldImagePath);
                         }
-                        previewImage.src = ''; // Clear image preview
-                        currentChapterImageContainer.classList.add('hidden'); // Hide the container
-                        chapterImageUploadInput.value = ''; // Clear the file input
-                        deleteChapterImageButton.classList.add('hidden'); // Hide the delete button itself
+                        previewImage.src = '';
+                        currentChapterImageContainer.classList.add('hidden');
+                        chapterImageUploadInput.value = '';
+                        deleteChapterImageButton.classList.add('hidden');
                     });
                 }
 
-                // Event listener for 'Delete Chapter' button
                 const deleteChapterBtn = block.querySelector('.delete-chapter');
                 deleteChapterBtn.addEventListener('click', function() {
-                    // Confirmation dialog before deleting a chapter
                     if (confirm(lang.confirm_delete_chapter)) {
                         const chapterToDeleteId = block.querySelector('.chapter-db-id').value;
                         if (chapterToDeleteId && !deletedQuestionIds.includes(chapterToDeleteId)) {
-                            deletedQuestionIds.push(chapterToDeleteId); // Track chapter for deletion
+                            deletedQuestionIds.push(chapterToDeleteId);
                         }
-                        // Mark associated question and options for deletion if they exist
                         const questionDbId = block.querySelector('.question-db-id').value;
                         if (questionDbId && !deletedQuestionIds.includes(questionDbId)) {
                             deletedQuestionIds.push(questionDbId);
@@ -708,8 +642,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
 
                         block.remove();
-                        chapterCounter = document.querySelectorAll('.chapter-block').length; // Re-count chapters
-                        // Re-number remaining chapters
+                        chapterCounter = document.querySelectorAll('.chapter-block').length;
                         document.querySelectorAll('.chapter-block').forEach((chap, index) => {
                             chap.querySelector('.chapter-number').textContent = index + 1;
                             updateChapterNextDisplay(chap);
@@ -719,7 +652,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
 
-                // Initial state setups for the new chapter block when it's first added
                 toggleNextChapterVisibility(block);
                 toggleQuestionSectionVisibility(block);
                 updateNextChapterRequired(block);
@@ -744,20 +676,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 const currentChapterBlock = optionsContainer.closest('.chapter-block');
                 const currentChapterId = currentChapterBlock.dataset.chapterId;
 
-                // Populate fields from optionData if provided
                 if (optionData) {
                     newOptionBlock.querySelector('.option-db-id').value = optionData.id || '';
                     newOptionBlock.querySelector('.option-text').value = optionData.text || '';
                     newOptionBlock.querySelector('.is-correct').checked = optionData.is_correct || false;
                     newOptionBlock.querySelector('.option-next').dataset.initialValue = optionData
-                        .next_chapter_id || ''; // Store DB ID
+                        .next_chapter_id || '';
                 }
 
 
                 const optionNextSelect = newOptionBlock.querySelector('.option-next');
-                optionNextSelect.innerHTML = getChapterOptionsHTML(currentChapterId); // Populate with all chapter options
+                optionNextSelect.innerHTML = getChapterOptionsHTML(currentChapterId);
 
-                optionsContainer.appendChild(newOptionBlock); // Append the new option block to the DOM
+                optionsContainer.appendChild(newOptionBlock);
 
                 const isCorrectCheckbox = newOptionBlock.querySelector('.is-correct');
                 isCorrectCheckbox.addEventListener('change', function() {
@@ -769,7 +700,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (confirm(lang.confirm_delete_option)) {
                         const optionDbId = newOptionBlock.querySelector('.option-db-id').value;
                         if (optionDbId && !deletedOptionIds.includes(optionDbId)) {
-                            deletedOptionIds.push(optionDbId); // Track option for deletion
+                            deletedOptionIds.push(optionDbId);
                         }
                         newOptionBlock.remove();
                         updateChapterOptions();
@@ -796,21 +727,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     let questionData = null;
                     if (hasQuestion) {
                         questionData = {
-                            id: block.querySelector('.question-db-id').value || null, // Existing DB ID or null
+                            id: block.querySelector('.question-db-id').value || null,
                             text: block.querySelector('.question-text').value.trim(),
                             hint: block.querySelector('.question-hint').value.trim(),
-                            type: questionType, // 1 for text, 2 for number, 3 for MCQ
+                            type: questionType,
                             wrong_feedback: block.querySelector('.wrong-feedback').value.trim(),
                         };
 
-                        if (questionType === '1' || questionType === '2') { // Input type (text/number)
+                        if (questionType === '1' || questionType === '2') {
                             questionData.input_answer = block.querySelector('.input-answer').value.trim();
-                        } else if (questionType === '3') { // MCQ
-                            questionData.input_answer = null; // No single input answer for MCQ
+                        } else if (questionType === '3') {
+                            questionData.input_answer = null;
                             questionData.options = [];
                             block.querySelectorAll('.options > .option-item').forEach(optionDiv => {
                                 questionData.options.push({
-                                    id: optionDiv.querySelector('.option-db-id').value || null, // Existing DB ID or null
+                                    id: optionDiv.querySelector('.option-db-id').value || null,
                                     text: optionDiv.querySelector('.option-text').value.trim(),
                                     is_correct: optionDiv.querySelector('.is-correct').checked,
                                     next_chapter_id: optionDiv.querySelector('.option-next').value,
@@ -819,7 +750,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
 
-                    // Collect the current chapter's image path if it's existing and not marked for deletion
                     let currentChapterImagePath = null;
                     const currentChapterImageContainer = block.querySelector('.current-chapter-image-container');
                     const currentChapterImage = currentChapterImageContainer.querySelector('img');
@@ -827,13 +757,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     const chapterDbId = block.querySelector('.chapter-db-id').value;
 
                     if (chapterImageUploadInput.files.length > 0) {
-                        // A new file is uploaded, its path will be handled by Laravel on the backend
                         currentChapterImagePath = null;
                     } else if (chapterDbId && initialStoryData.chapters.find(c => c.id == chapterDbId && c.image_path) &&
                         currentChapterImageContainer && !currentChapterImageContainer.classList.contains('hidden')) {
-                        // If there was an existing image and it's not hidden
                         const pathFromSrc = currentChapterImage.src.includes('storage/') ? currentChapterImage.src.split('/storage/').pop() : null;
-                        // Only add to collected path if it's not in the deleted list
                         if (pathFromSrc && !deletedChapterImagePaths.includes('chapter_images/' + pathFromSrc)) {
                             currentChapterImagePath = 'chapter_images/' + pathFromSrc;
                         } else {
@@ -863,11 +790,10 @@ document.addEventListener('DOMContentLoaded', function() {
              * @param {string} message The error message to display.
              */
             function displayInlineError(inputElement, message) {
-                // Try to find an existing error message element directly after the input
                 let errorElement = inputElement.nextElementSibling;
                 if (errorElement && errorElement.classList.contains('text-red-500')) {
                     errorElement.textContent = message;
-                    errorElement.style.display = 'block'; // Ensure it's visible
+                    errorElement.style.display = 'block';
                 }
             }
 
@@ -882,20 +808,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
 
-            // Handles form submission, including validation and packaging data
             window.prepareAndSubmitStory = function(event) {
-                event.preventDefault(); // Prevent default browser form submission to allow custom validation
+                event.preventDefault();
 
                 clearAllInlineErrors();
 
                 let errors = [];
 
-                // Helper function to add an error
                 function addError(inputElement, message) {
                     errors.push({ input: inputElement, message: message });
                 }
 
-                // Get references to main story input elements for validation
                 const storyNameInput = document.getElementById('story-name');
                 const storyDescriptionTextarea = document.getElementById('story-description');
                 const imageFileInput = document.getElementById('image-upload');
@@ -903,34 +826,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 const storyDistanceInput = document.getElementById('story-distance');
                 const storyTimeInput = document.getElementById('story-time');
 
-                // Perform validation for each required main story field
                 if (!storyNameInput.value.trim()) { addError(storyNameInput, lang.validation_story_name_required); }
                 if (!storyDescriptionTextarea.value.trim()) { addError(storyDescriptionTextarea, lang.validation_story_description_required); }
                 if (!storyPlaceInput.value.trim()) { addError(storyPlaceInput, lang.validation_story_place_required); }
                 if (storyDistanceInput.value.trim() === '' || parseFloat(storyDistanceInput.value.trim()) < 0) { addError(storyDistanceInput, lang.validation_distance_required); }
                 if (storyTimeInput.value.trim() === '' || parseFloat(storyTimeInput.value.trim()) < 0) { addError(storyTimeInput, lang.validation_time_required); }
 
-                // Collect all chapter data from the dynamic sections
                 const chapters = collectChapters();
 
-                // Chapter and Question Validation
                 for (let i = 0; i < chapters.length; i++) {
                     const chapter = chapters[i];
-                    const chapterBlock = document.querySelectorAll('.chapter-block')[i]; // Get actual DOM element for inline error placement
+                    const chapterBlock = document.querySelectorAll('.chapter-block')[i];
 
-                    // Validate Chapter Title
                     const chapterTitleInput = chapterBlock.querySelector('.chapter-title');
                     if (!chapter.title) {
                         addError(chapterTitleInput, lang.validation_chapter_title_required);
                     }
 
-                    // Validate Chapter Content
                     const chapterContentTextarea = chapterBlock.querySelector('.chapter-content');
                     if (!chapter.content) {
                         addError(chapterContentTextarea, lang.validation_chapter_content_required);
                     }
 
-                     // Validate 'Next Chapter' selection if it's NOT an end chapter AND NOT an MCQ
                     const nextChapterSelect = chapterBlock.querySelector('.next-chapter');
                     if (!chapter.is_end && !(chapter.question && chapter.question.type === '3')) {
                         if (!chapter.next_chapter_id) {
@@ -938,53 +855,45 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
 
-                    // If the chapter has a question, validate its details
                     if (chapter.question) {
-                         // Validate Question Text
                         const questionTextInput = chapterBlock.querySelector('.question-text');
                         if (!chapter.question.text) {
                             addError(questionTextInput, lang.validation_question_text_required);
                         }
 
-                         // Validate Wrong Answer Feedback
                         const wrongFeedbackTextarea = chapterBlock.querySelector('.wrong-feedback');
-                        // Apply the same logic as updateWrongFeedbackRequired for validation
-                        if (chapter.question.type === '3') { // If it's an MCQ
-                            const options = chapter.question.options; // Use collected options for validation
+                        if (chapter.question.type === '3') {
+                            const options = chapter.question.options;
                             let hasCorrectOption = false;
                             options.forEach(option => {
                                 if (option.is_correct) {
                                     hasCorrectOption = true;
                                 }
                             });
-                            // Wrong feedback is required IF there is at least one correct option AND it's empty
                             if (hasCorrectOption && !chapter.question.wrong_feedback) {
                                 addError(wrongFeedbackTextarea, lang.validation_feedback_required);
                             }
                         } else {
-                            // For text/number questions, feedback is always required if a question is present and it's empty
                             if (!chapter.question.wrong_feedback) {
                                 addError(wrongFeedbackTextarea, lang.validation_feedback_required);
                             }
                         }
 
-                        // Validate Question Type selection
                         const questionTypeSelect = chapterBlock.querySelector('.question-type');
                         if (!['1', '2', '3'].includes(questionTypeSelect.value)) {
                              addError(questionTypeSelect, lang.validation_answer_type_required);
                         }
 
-                         // Specific validation based on Question Type
-                        if (chapter.question.type === '1' || chapter.question.type === '2') { // Input type (Text or Number)
+                        if (chapter.question.type === '1' || chapter.question.type === '2') {
                             const inputAnswerInput = chapterBlock.querySelector('.input-answer');
                             if (!chapter.question.input_answer) {
                                 addError(inputAnswerInput, lang.validation_correct_answer_required);
                             }
-                            if (chapter.question.type === '2' && isNaN(chapter.question.input_answer)) { // Number Input
+                            if (chapter.question.type === '2' && isNaN(chapter.question.input_answer)) {
                                 addError(inputAnswerInput, lang.validation_answer_must_be_number);
                             }
                         }
-                            if (chapter.question.type === '3') { // MCQ
+                            if (chapter.question.type === '3') {
                             let hasCorrectOption = false;
 
                             for (let j = 0; j < chapter.question.options.length; j++) {
@@ -1007,17 +916,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
 
-                // Display all collected errors
                 if (errors.length > 0) {
                     errors.forEach(error => {
                         displayInlineError(error.input, error.message);
                     });
-                    // Scroll to the first error
                     errors[0].input.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return;
                 }
 
-                // If all validations pass, set hidden inputs and submit
                 chaptersDataInput.value = JSON.stringify(chapters);
                 chapterImagesToDeleteInput.value = JSON.stringify(deletedChapterImagePaths);
                 deletedQuestionIdsInput.value = JSON.stringify(deletedQuestionIds);
@@ -1026,21 +932,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 form.submit();
             };
 
-            // Load chapters
             if (initialStoryData.chapters && initialStoryData.chapters.length > 0) {
-                // Sort chapters by their 'order' property before adding them to maintain sequence
                 initialStoryData.chapters.sort((a, b) => a.order - b.order);
                 initialStoryData.chapters.forEach(chapterData => {
                     addChapter(chapterData);
                 });
             } else {
-                addChapter(); // Add a default empty chapter if no chapters exist
+                addChapter();
             }
 
-            // After all chapters are loaded, run a final update for all dropdowns
             updateChapterOptions();
 
-            // Set values for next chapter dropdowns and option next chapter dropdowns after all chapters are rendered
             document.querySelectorAll('.chapter-block').forEach(block => {
                 const nextSelect = block.querySelector('.next-chapter');
                 if (nextSelect.dataset.initialValue) {
@@ -1049,7 +951,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         .find(b => {
                             const tempIdVal = b.querySelector('.chapter-temp-id').value;
                             const dbIdVal = b.querySelector('.chapter-db-id').value;
-                            return tempIdVal == initialDbId || dbIdVal == initialDbId; // Check both
+                            return tempIdVal == initialDbId || dbIdVal == initialDbId;
                         });
                     if (targetChapterBlock) {
                         nextSelect.value = targetChapterBlock.dataset.chapterId;
@@ -1063,7 +965,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             .find(b => {
                                 const tempIdVal = b.querySelector('.chapter-temp-id').value;
                                 const dbIdVal = b.querySelector('.chapter-db-id').value;
-                                return tempIdVal == initialDbId || dbIdVal == initialDbId; // Check both
+                                return tempIdVal == initialDbId || dbIdVal == initialDbId;
                             });
                         if (targetChapterBlock) {
                             optionNextSelect.value = targetChapterBlock.dataset.chapterId;
