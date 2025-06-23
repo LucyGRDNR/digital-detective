@@ -9,46 +9,59 @@
         </svg>
     </button>
 
-    <div class="hidden sm:flex sm:items-center sm:space-x-4">
-        <div class="relative" x-data="{ langDropdownOpen: false }">
-            <button @click="langDropdownOpen = !langDropdownOpen" class="flex items-center space-x-1 bg-gray-700 px-3 py-1 rounded-md text-white hover:bg-gray-600 transition duration-200 ease-in-out">
-                <i class="fas fa-globe mr-2"></i> <?php echo e(strtoupper(App::getLocale())); ?>
-
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
-
-            <div x-show="langDropdownOpen" @click.away="langDropdownOpen = false"
-                x-transition:enter="transition ease-out duration-100"
-                x-transition:enter-start="transform opacity-0 scale-95"
-                x-transition:enter-end="transform opacity-100 scale-100"
-                x-transition:leave="transition ease-in duration-75"
-                x-transition:leave-start="transform opacity-100 scale-100"
-                x-transition:leave-end="transform opacity-0 scale-95"
-                class="absolute right-0 mt-2 w-32 bg-gray-700 text-white rounded-md shadow-lg z-50 origin-top-right border border-gray-600">
-                <form action="<?php echo e(route('language.switch')); ?>" method="POST">
-                    <?php echo csrf_field(); ?>
-                    <input type="hidden" name="locale" value="cs">
-                    <button type="submit" class="block w-full text-left px-4 py-2 rounded-t-md hover:bg-gray-600 transition duration-150 ease-in-out <?php if(App::getLocale() == 'cs'): ?> font-bold bg-gray-600 <?php endif; ?>">Česky</button>
-                </form>
-                <form action="<?php echo e(route('language.switch')); ?>" method="POST">
-                    <?php echo csrf_field(); ?>
-                    <input type="hidden" name="locale" value="en">
-                    <button type="submit" class="block w-full text-left px-4 py-2 rounded-b-md hover:bg-gray-600 transition duration-150 ease-in-out <?php if(App::getLocale() == 'en'): ?> font-bold bg-gray-600 <?php endif; ?>">English</button>
-                </form>
-            </div>
-        </div>
-
+    <div class="hidden sm:flex sm:items-center sm:space-x-6">
         <?php if(auth()->guard()->guest()): ?>
+            <div class="relative" x-data="{ langDropdownOpen: false }">
+                <button @click="langDropdownOpen = !langDropdownOpen" class="flex items-center space-x-1 bg-gray-700 px-3 py-1 rounded-md text-white hover:bg-gray-600 transition duration-200 ease-in-out">
+                    <i class="fas fa-globe mr-2"></i> <?php echo e(strtoupper(App::getLocale())); ?>
+
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <div x-show="langDropdownOpen" @click.away="langDropdownOpen = false"
+                    x-transition:enter="transition ease-out duration-100"
+                    x-transition:enter-start="transform opacity-0 scale-95"
+                    x-transition:enter-end="transform opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-75"
+                    x-transition:leave-start="transform opacity-100 scale-100"
+                    x-transition:leave-end="transform opacity-0 scale-95"
+                    class="absolute right-0 mt-2 w-32 bg-gray-700 text-white rounded-md shadow-lg z-50 origin-top-right border border-gray-600">
+                    <form action="<?php echo e(route('language.switch')); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
+                        <input type="hidden" name="locale" value="cs">
+                        <button type="submit" class="block w-full text-left px-4 py-2 rounded-t-md hover:bg-gray-600 transition duration-150 ease-in-out <?php if(App::getLocale() == 'cs'): ?> font-bold bg-gray-600 <?php endif; ?>">Česky</button>
+                    </form>
+                    <form action="<?php echo e(route('language.switch')); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
+                        <input type="hidden" name="locale" value="en">
+                        <button type="submit" class="block w-full text-left px-4 py-2 rounded-b-md hover:bg-gray-600 transition duration-150 ease-in-out <?php if(App::getLocale() == 'en'): ?> font-bold bg-gray-600 <?php endif; ?>">English</button>
+                    </form>
+                </div>
+            </div>
+
             <a href="<?php echo e(route('login')); ?>" class="text-blue-400 hover:underline transition duration-200 ease-in-out"><?php echo e(__('welcome-show.login_link')); ?></a>
             <a href="<?php echo e(route('register')); ?>" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition duration-200 ease-in-out"><?php echo e(__('welcome-show.register_link')); ?></a>
         <?php endif; ?>
 
         <?php if(auth()->guard()->check()): ?>
+            <?php
+                $currentXp = Auth::user()->xp ?? 0;
+                $currentLevel = Auth::user()->level ?? 1;
+                $xpThreshold = 75; 
+
+                $xpForCurrentLevelStart = ($currentLevel - 1) * $xpThreshold;
+                $xpIntoCurrentLevel = $currentXp - $xpForCurrentLevelStart;
+                $xpNeededForNextLevel = $xpThreshold;
+                $xpProgressPercent = ($xpNeededForNextLevel > 0) ? ($xpIntoCurrentLevel / $xpNeededForNextLevel) * 100 : 100;
+                $xpRemaining = $xpNeededForNextLevel - $xpIntoCurrentLevel;
+            ?>
+
             <div class="relative" x-data="{ dropdownOpen: false }">
-                <button @click="dropdownOpen = !dropdownOpen" class="flex items-center space-x-2 bg-gray-700 px-3 py-1 rounded text-white hover:bg-gray-600 transition duration-200 ease-in-out">
+                <button @click="dropdownOpen = !dropdownOpen" class="flex items-center space-x-2 bg-gray-700 px-3 py-1 rounded-md text-white hover:bg-gray-600 transition duration-200 ease-in-out">
                     <span><?php echo e(Auth::user()->name); ?></span>
+                    <span class="ml-2 px-2 py-1 bg-blue-600 text-xs rounded-full font-bold">Lvl <?php echo e($currentLevel); ?></span> 
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
@@ -61,9 +74,34 @@
                     x-transition:leave="transition ease-in duration-75"
                     x-transition:leave-start="transform opacity-100 scale-100"
                     x-transition:leave-end="transform opacity-0 scale-95"
-                    class="absolute right-0 mt-2 w-48 bg-gray-700 text-white rounded shadow-lg z-50 border border-gray-600">
+                    class="absolute right-0 mt-2 w-48 bg-gray-700 text-white rounded-md shadow-lg z-50 border border-gray-600">
+                    
+                    <div class="px-4 py-2 text-xs border-b border-gray-600">
+                        <p class="mb-1">XP: <?php echo e($xpIntoCurrentLevel); ?>/<?php echo e($xpNeededForNextLevel); ?></p>
+                        <div class="relative w-full h-3 bg-gray-600 rounded-full overflow-hidden">
+                            <div class="absolute inset-0 bg-blue-500 transition-all duration-300 ease-in-out rounded-full" style="width: <?php echo e($xpProgressPercent); ?>%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="py-1 border-b border-gray-600">
+                        <form action="<?php echo e(route('language.switch')); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <input type="hidden" name="locale" value="cs">
+                            <button type="submit" class="block w-full text-left px-4 py-2 hover:bg-gray-600 transition duration-150 ease-in-out <?php if(App::getLocale() == 'cs'): ?> font-bold bg-gray-600 <?php endif; ?>">
+                                <i class="fas fa-globe mr-2"></i> Česky
+                            </button>
+                        </form>
+                        <form action="<?php echo e(route('language.switch')); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <input type="hidden" name="locale" value="en">
+                            <button type="submit" class="block w-full text-left px-4 py-2 hover:bg-gray-600 transition duration-150 ease-in-out <?php if(App::getLocale() == 'en'): ?> font-bold bg-gray-600 <?php endif; ?>">
+                                <i class="fas fa-globe mr-2"></i> English
+                            </button>
+                        </form>
+                    </div>
+
                     <?php if(Auth::user()->hasRole('admin')): ?>
-                        <a href="<?php echo e(route('story.create')); ?>" class="block px-4 py-2 text-sm hover:bg-gray-600 transition duration-150 ease-in-out rounded-t">
+                        <a href="<?php echo e(route('story.create')); ?>" class="block px-4 py-2 text-sm hover:bg-gray-600 transition duration-150 ease-in-out">
                         <?php echo e(__('welcome-show.add_new_story')); ?>
 
                         </a>
@@ -99,9 +137,24 @@
                     </svg>
                 </button>
 
-                <div class="flex flex-col space-y-4">
+                <div class="flex flex-col space-y-4 pt-4">
+                    <?php if(auth()->guard()->check()): ?>
+                    <div class="flex items-center space-x-2 bg-gray-700 px-4 py-2 rounded-md text-white border border-gray-600">
+                        <span class="font-bold text-lg leading-none"><?php echo e(Auth::user()->name); ?></span>
+                        <span class="ml-2 px-2 py-1 bg-blue-600 text-sm rounded-full font-bold">Lvl <?php echo e($currentLevel); ?></span>
+                    </div>
+
+                    <div class="px-4 py-2 text-xs">
+                        <p class="mb-1 text-white">XP: <?php echo e($xpIntoCurrentLevel); ?>/<?php echo e($xpNeededForNextLevel); ?></p>
+                        <div class="relative w-full h-3 bg-gray-600 rounded-full overflow-hidden">
+                            <div class="absolute inset-0 bg-blue-500 transition-all duration-300 ease-in-out rounded-full" style="width: <?php echo e($xpProgressPercent); ?>%;"></div>
+                        </div>
+                        <p class="mt-1 text-gray-400">Total: <?php echo e($currentXp); ?> XP</p>
+                    </div>
+                    <?php endif; ?>
+
                     <div class="relative w-full mt-8" x-data="{ langDropdownOpen: false }">
-                        <button @click="langDropdownOpen = !langDropdownOpen" class="flex items-center justify-between w-full space-x-1 bg-gray-700 px-4 py-2 rounded text-white hover:bg-gray-600 transition duration-200 ease-in-out">
+                        <button @click="langDropdownOpen = !langDropdownOpen" class="flex items-center justify-between w-full space-x-1 bg-gray-700 px-4 py-2 rounded-md text-white hover:bg-gray-600 transition duration-200 ease-in-out">
                             <span class="flex items-center space-x-2"><i class="fas fa-globe mr-2"></i> <?php echo e(strtoupper(App::getLocale())); ?></span>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -146,4 +199,5 @@
                 </div>
             </div>
         </div>
-</nav><?php /**PATH C:\Users\lugar\Desktop\digital-detective\digital-detective\resources\views/partials/_navbar.blade.php ENDPATH**/ ?>
+</nav>
+<?php /**PATH C:\Users\lugar\Desktop\digital-detective\digital-detective\resources\views/partials/_navbar.blade.php ENDPATH**/ ?>
