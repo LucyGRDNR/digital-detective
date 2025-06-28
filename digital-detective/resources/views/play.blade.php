@@ -14,7 +14,7 @@
       <meta name="csrf-token" content="{{ csrf_token() }}">
       @livewireStyles
   </head>
-  <body class="bg-[url('/storage/app/public/images/download.png')] bg-repeat bg-center text-white min-h-screen">
+  <body class="bg-[url('/storage/app/public/images/download.png')] bg-no-repeat bg-cover bg-fixed text-white min-h-screen relative">
     @include('partials._navbar')
     <main class="px-4 py-10">
       <div id="game-container" class="max-w-3xl mx-auto rounded-lg bg-gray-900 bg-opacity-80 p-6 shadow-md border border-gray-700">

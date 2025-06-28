@@ -15,7 +15,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     </head>
 
-    <body class="bg-[url('/storage/app/public/images/download.png')] bg-repeat bg-center text-white min-h-screen">
+    <body class="bg-[url('/storage/app/public/images/download.png')] bg-no-repeat bg-cover bg-fixed text-white min-h-screen relative">
 
         @include('partials._navbar')
 
@@ -33,7 +33,7 @@
                             <label for="story-name" class="block text-sm font-medium text-gray-700 mb-1">
                                 {{ __('create-edit.story_name') }}:<span class="text-red-500">*</span>
                             </label>
-                            <input type="text" id="story-name" name="name" maxlength="255" required
+                            <input type="text" id="story-name" name="name" maxlength="80" required
                                 class="story-input border border-gray-300 p-2 rounded-md w-full focus:ring-purple-500 focus:border-purple-500 text-gray-900"
                                 value="{{ old('name', $story->name) }}">
                                 <p id="error-name" class="text-red-500 text-xs mt-1"></p>
@@ -74,7 +74,7 @@
                             <label for="story-place" class="block text-sm font-medium text-gray-700 mb-1">
                                 {{ __('create-edit.story_place') }}:<span class="text-red-500">*</span>
                             </label>
-                            <input type="text" id="story-place" name="place"
+                            <input type="text" id="story-place" maxlength="80" name="place"
                                 class="story-input border border-gray-300 p-2 rounded-md w-full focus:ring-purple-500 focus:border-purple-500 text-gray-900"
                                 value="{{ old('place', $story->place) }}">
                             <p id="error-place" class="text-red-500 text-xs mt-1"></p>
