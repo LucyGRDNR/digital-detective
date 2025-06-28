@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
-<body class="bg-[url('/storage/app/public/images/download.png')] bg-repeat bg-center text-white min-h-screen">
+<body class="bg-[url('/storage/app/public/images/download.png')] bg-no-repeat bg-cover bg-fixed text-white min-h-screen relative">
     <?php echo $__env->make('partials._navbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <main class="px-6 py-6">
@@ -48,9 +48,10 @@
                 this.filterDistance = '';
                 this.filterTime = '';
             }
-        }" class="space-y-6 max-w-6xl mx-auto"> <form @submit.prevent class="flex flex-col md:flex-row gap-4 w-full items-center">
+        }" class="space-y-6 max-w-6xl mx-auto">
+            <form @submit.prevent class="flex flex-col md:flex-row gap-4 w-full items-center">
                 <input type="text" x-model="searchQuery" placeholder="<?php echo e(__('welcome-show.search')); ?>"
-                    class="p-2 rounded bg-gray-700 text-white placeholder-gray-400 w-full md:flex-1 min-w-[180px]">
+                    class="p-2 rounded bg-gray-700 bg-opacity-80 text-white placeholder-gray-400 w-full md:flex-1 min-w-[180px]">
 
                 <div class="flex flex-col sm:flex-row gap-4 w-full md:flex-1">
                     <div class="relative w-full sm:flex-1" x-data="{ distanceDropdownOpen: false }">
@@ -85,20 +86,16 @@
                             class="absolute left-0 mt-2 w-full min-w-max bg-gray-700 text-white rounded shadow-lg z-50 origin-top-left border border-gray-600">
                             <button type="button" @click="filterDistance = ''; distanceDropdownOpen = false"
                                 class="block w-full text-left px-4 py-2 hover:bg-gray-600 transition duration-150 ease-in-out"
-                                :class="{ 'font-bold bg-gray-600': filterDistance === '' }"
-                            ><?php echo e(__('welcome-show.distance')); ?></button>
+                                :class="{ 'font-bold bg-gray-600': filterDistance === '' }"><?php echo e(__('welcome-show.distance')); ?></button>
                             <button type="button" @click="filterDistance = 'short'; distanceDropdownOpen = false"
                                 class="block w-full text-left px-4 py-2 hover:bg-gray-600 transition duration-150 ease-in-out"
-                                :class="{ 'font-bold bg-gray-600': filterDistance === 'short' }"
-                            >0 - 2 km</button>
+                                :class="{ 'font-bold bg-gray-600': filterDistance === 'short' }">0 - 2 km</button>
                             <button type="button" @click="filterDistance = 'medium'; distanceDropdownOpen = false"
                                 class="block w-full text-left px-4 py-2 hover:bg-gray-600 transition duration-150 ease-in-out"
-                                :class="{ 'font-bold bg-gray-600': filterDistance === 'medium' }"
-                            >2 - 5 km</button>
+                                :class="{ 'font-bold bg-gray-600': filterDistance === 'medium' }">2 - 5 km</button>
                             <button type="button" @click="filterDistance = 'long'; distanceDropdownOpen = false"
                                 class="block w-full text-left px-4 py-2 hover:bg-gray-600 transition duration-150 ease-in-out"
-                                :class="{ 'font-bold bg-gray-600': filterDistance === 'long' }"
-                            >5+ km</button>
+                                :class="{ 'font-bold bg-gray-600': filterDistance === 'long' }">5+ km</button>
                         </div>
                     </div>
 
@@ -134,20 +131,16 @@
                             class="absolute left-0 mt-2 w-full min-w-max bg-gray-700 text-white rounded shadow-lg z-50 origin-top-left border border-gray-600">
                             <button type="button" @click="filterTime = ''; timeDropdownOpen = false"
                                 class="block w-full text-left px-4 py-2 hover:bg-gray-600 transition duration-150 ease-in-out"
-                                :class="{ 'font-bold bg-gray-600': filterTime === '' }"
-                            ><?php echo e(__('welcome-show.time')); ?></button>
+                                :class="{ 'font-bold bg-gray-600': filterTime === '' }"><?php echo e(__('welcome-show.time')); ?></button>
                             <button type="button" @click="filterTime = 'short'; timeDropdownOpen = false"
                                 class="block w-full text-left px-4 py-2 hover:bg-gray-600 transition duration-150 ease-in-out"
-                                :class="{ 'font-bold bg-gray-600': filterTime === 'short' }"
-                            >0 - 15 min</button>
+                                :class="{ 'font-bold bg-gray-600': filterTime === 'short' }">0 - 15 min</button>
                             <button type="button" @click="filterTime = 'medium'; timeDropdownOpen = false"
                                 class="block w-full text-left px-4 py-2 hover:bg-gray-600 transition duration-150 ease-in-out"
-                                :class="{ 'font-bold bg-gray-600': filterTime === 'medium' }"
-                            >15 - 30 min</button>
+                                :class="{ 'font-bold bg-gray-600': filterTime === 'medium' }">15 - 30 min</button>
                             <button type="button" @click="filterTime = 'long'; timeDropdownOpen = false"
                                 class="block w-full text-left px-4 py-2 hover:bg-gray-600 transition duration-150 ease-in-out"
-                                :class="{ 'font-bold bg-gray-600': filterTime === 'long' }"
-                            >30+ min</button>
+                                :class="{ 'font-bold bg-gray-600': filterTime === 'long' }">30+ min</button>
                         </div>
                     </div>
                 </div>
@@ -162,7 +155,7 @@
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
                 <template x-for="story in filteredStories()" :key="story.id">
                     <div
-                        class="relative flex flex-col rounded-lg bg-gray-800 bg-opacity-90 p-4 shadow-md transition duration-200 ease-in-out hover:scale-105 hover:shadow-lg">
+                        class="relative flex flex-col rounded-2xl bg-gray-800 bg-opacity-70 shadow-md transition duration-200 ease-in-out hover:scale-105  overflow-hidden">
                         <template x-if="<?php echo e(Auth::check() && Auth::user()->hasRole('admin') ? 'true' : 'false'); ?>">
                             <a :href="`/stories/${story.id}/edit`"
                                 class="absolute top-2 right-2 text-blue-400 hover:text-blue-200 z-10 p-2 rounded-full bg-gray-700 bg-opacity-70 hover:bg-opacity-100 transition duration-150 ease-in-out"
@@ -171,23 +164,28 @@
                             </a>
                         </template>
 
-                        <a :href="`/stories/${story.id}`" style="text-decoration: none; color: inherit;">
-                            <div class="mb-3 h-48 w-full overflow-hidden rounded">
+                        <a :href="`/stories/${story.id}`" class="block">
+                            <div class="h-48 w-full overflow-hidden rounded-t-lg">
                                 <img :src="story.image_path ? `/storage/${story.image_path}` : 'https://placehold.co/400x250/333333/FFFFFF?text=No+Image'"
-                                    alt="" class="h-full w-full object-cover" />
+                                    alt="Story Image" class="h-full w-full object-cover" />
                             </div>
-                            <h2 class="mb-1 text-lg font-bold text-center" x-text="story.name"></h2>
-                            <p class="mb-2 text-sm text-gray-300">
+                        </a>
+
+                        <a :href="`/stories/${story.id}`" class="block flex-grow p-4">
+                            <h2 class="mb-2 text-xl font-bold text-left" x-text="story.name"></h2>
+                            <p class="mb-3 text-sm text-gray-300 line-clamp-3" x-text="story.description">
+                            </p>
+                            <p class="mb-1 text-sm text-gray-300">
                                 <strong class="text-gray-200">
                                     <i class="fas fa-map-marker-alt mr-2 text-base"></i> <span><?php echo e(__('welcome-show.location')); ?></span>:
                                 </strong> <span x-text="story.place"></span>
                             </p>
-                            <p class="mb-2 text-sm text-gray-300">
+                            <p class="mb-1 text-sm text-gray-300">
                                 <strong class="text-gray-200">
                                     <i class="fas fa-clock mr-2"></i> <span><?php echo e(__('welcome-show.time')); ?></span>:
                                 </strong> <span x-text="story.time"></span> <span><?php echo e(__('welcome-show.minutes')); ?></span>
                             </p>
-                            <p class="mb-2 text-sm text-gray-300">
+                            <p class="mb-3 text-sm text-gray-300">
                                 <strong class="text-gray-200">
                                     <i class="fas fa-route mr-2"></i> <span><?php echo e(__('welcome-show.distance')); ?></span>:
                                 </strong> <span x-text="story.distance"></span> <span><?php echo e(__('welcome-show.kilometers')); ?></span>

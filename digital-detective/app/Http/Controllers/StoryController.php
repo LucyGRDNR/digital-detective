@@ -42,16 +42,16 @@ class StoryController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'place' => 'nullable|string|max:80',
-            'image_file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
+            'name' => 'required|string|max:80',
+            'description' => 'required|nullable|string',
+            'place' => 'required|string|max:80',
+            'image_file' => 'required|image|mimes:jpeg,png,jpg,gif,svg', 
             'place_GPS' => 'nullable|string|max:255',
             'distance' => 'required|integer|min:0',
             'time' => 'required|integer|min:0',
             'chapters_data' => 'required|string', 
             'chapter_images' => 'nullable|array', 
-            'chapter_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
+            'chapter_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg', 
         ]);
 
         $chaptersData = json_decode($validatedData['chapters_data'], true);
@@ -59,7 +59,7 @@ class StoryController extends Controller
         foreach ($chaptersData as $index => $chapter) {
             $chapterValidator = Validator::make($chapter, [
                 'id' => 'required|string', 
-                'title' => 'required|string|max:255',
+                'title' => 'required|string|max:40',
                 'content' => 'nullable|string',
                 'is_end' => 'required|boolean',
                 'next_chapter' => 'nullable|string', 
@@ -259,17 +259,17 @@ class StoryController extends Controller
     public function update(Request $request, Story $story)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:80',
             'description' => 'nullable|string',
-            'place' => 'nullable|string|max:255',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
+            'place' => 'nullable|string|max:80',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg', 
             'place_GPS' => 'nullable|string|max:255',
             'distance' => 'required|integer|min:0',
             'time' => 'required|integer|min:0',
             'chapters_data' => 'required|string',
             'chapter_images_to_delete' => 'nullable|string',
             'chapter_images' => 'nullable|array',
-            'chapter_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'chapter_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'delete_story_image' => 'nullable|boolean',
         ]);
 
@@ -279,7 +279,7 @@ class StoryController extends Controller
         foreach ($chaptersData as $index => $chapter) {
             $chapterValidator = Validator::make($chapter, [
                 'id' => 'required|string', 
-                'title' => 'required|string|max:255',
+                'title' => 'required|string|max:40',
                 'content' => 'nullable|string',
                 'is_end' => 'required|boolean',
                 'next_chapter_id' => 'nullable|string', 

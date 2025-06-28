@@ -1,4 +1,4 @@
-<nav class="mb-6 w-full flex items-center justify-between bg-gray-900 bg-opacity-90 p-4 shadow-lg" x-data="{ open: false }">
+<nav class="mb-2 w-full flex items-center justify-between bg-gray-900 bg-opacity-70 p-4 shadow-lg" x-data="{ open: false }">
     <div class="text-2xl font-bold text-white">
         <a href="<?php echo e(route('home')); ?>" class="text-white hover:text-gray-300 transition duration-200 ease-in-out"><?php echo e(__('welcome-show.digital_detective')); ?></a>
     </div>
@@ -12,7 +12,7 @@
     <div class="hidden sm:flex sm:items-center sm:space-x-6">
         <?php if(auth()->guard()->guest()): ?>
             <div class="relative" x-data="{ langDropdownOpen: false }">
-                <button @click="langDropdownOpen = !langDropdownOpen" class="flex items-center space-x-1 bg-gray-700 px-3 py-1 rounded-md text-white hover:bg-gray-600 transition duration-200 ease-in-out">
+                <button @click="langDropdownOpen = !langDropdownOpen" class="flex items-center space-x-1 bg-gray-800 px-3 py-1 rounded-md text-white hover:bg-gray-600 transition duration-200 ease-in-out">
                     <i class="fas fa-globe mr-2"></i> <?php echo e(strtoupper(App::getLocale())); ?>
 
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -27,7 +27,7 @@
                     x-transition:leave="transition ease-in duration-75"
                     x-transition:leave-start="transform opacity-100 scale-100"
                     x-transition:leave-end="transform opacity-0 scale-95"
-                    class="absolute right-0 mt-2 w-32 bg-gray-700 text-white rounded-md shadow-lg z-50 origin-top-right border border-gray-600">
+                    class="absolute right-0 mt-2 w-32 bg-gray-700  text-white rounded-md shadow-lg z-50 origin-top-right border border-gray-600">
                     <form action="<?php echo e(route('language.switch')); ?>" method="POST">
                         <?php echo csrf_field(); ?>
                         <input type="hidden" name="locale" value="cs">
@@ -41,8 +41,8 @@
                 </div>
             </div>
 
-            <a href="<?php echo e(route('login')); ?>" class="text-blue-400 hover:underline transition duration-200 ease-in-out"><?php echo e(__('welcome-show.login_link')); ?></a>
-            <a href="<?php echo e(route('register')); ?>" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition duration-200 ease-in-out"><?php echo e(__('welcome-show.register_link')); ?></a>
+            <a href="<?php echo e(route('login')); ?>" class="text-white hover:underline transition duration-200 ease-in-out"><?php echo e(__('welcome-show.login_link')); ?></a>
+            <a href="<?php echo e(route('register')); ?>" class="rounded bg-gray-800  px-4 py-2 text-white hover:bg-gray-600 transition duration-200 ease-in-out"><?php echo e(__('welcome-show.register_link')); ?></a>
         <?php endif; ?>
 
         <?php if(auth()->guard()->check()): ?>
@@ -59,9 +59,9 @@
             ?>
 
             <div class="relative" x-data="{ dropdownOpen: false }">
-                <button @click="dropdownOpen = !dropdownOpen" class="flex items-center space-x-2 bg-gray-700 px-3 py-1 rounded-md text-white hover:bg-gray-600 transition duration-200 ease-in-out">
+                <button @click="dropdownOpen = !dropdownOpen" class="flex items-center space-x-2 bg-gray-800 px-3 py-1 rounded-md text-white hover:bg-gray-600 transition duration-200 ease-in-out">
                     <span><?php echo e(Auth::user()->name); ?></span>
-                    <span class="ml-2 px-2 py-1 bg-blue-600 text-xs rounded-full font-bold">Lvl <?php echo e($currentLevel); ?></span> 
+                    <span class="ml-2 px-2 py-1 bg-blue-600 text-xs rounded-full font-bold">Lvl <?php echo e($currentLevel); ?></span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
@@ -74,7 +74,7 @@
                     x-transition:leave="transition ease-in duration-75"
                     x-transition:leave-start="transform opacity-100 scale-100"
                     x-transition:leave-end="transform opacity-0 scale-95"
-                    class="absolute right-0 mt-2 w-48 bg-gray-700 text-white rounded-md shadow-lg z-50 border border-gray-600">
+                    class="absolute right-0 mt-2 w-48 bg-gray-800 text-white rounded-md shadow-lg z-50 border border-gray-600">
                     
                     <div class="px-4 py-2 text-xs border-b border-gray-600">
                         <p class="mb-1">XP: <?php echo e($xpIntoCurrentLevel); ?>/<?php echo e($xpNeededForNextLevel); ?></p>
@@ -139,7 +139,7 @@
 
                 <div class="flex flex-col space-y-4 pt-4">
                     <?php if(auth()->guard()->check()): ?>
-                    <div class="flex items-center space-x-2 bg-gray-700 px-4 py-2 rounded-md text-white border border-gray-600">
+                    <div class="flex items-center space-x-2 bg-gray-800 px-4 py-2 rounded-md text-white border border-gray-600">
                         <span class="font-bold text-lg leading-none"><?php echo e(Auth::user()->name); ?></span>
                         <span class="ml-2 px-2 py-1 bg-blue-600 text-sm rounded-full font-bold">Lvl <?php echo e($currentLevel); ?></span>
                     </div>
